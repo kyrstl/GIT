@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
 
 public class Blob {
+    private String sha1 = "";
     public Blob (String fileName) throws IOException, NoSuchAlgorithmException {
         //File myFile = new File(fileName);
 
@@ -22,7 +23,7 @@ public class Blob {
         //converting to sha1
         //String test1 = "1010";
 
-        String sha1 = encryptPassword(str);
+        sha1 = encryptPassword(str);
         System.out.println("TEST BYTE: " + str);
         
         System.out.println("SHA : " + sha1);
@@ -30,7 +31,7 @@ public class Blob {
         //printing to objects folder
         String dirName = "./objects/";
         File dir = new File (dirName);//create this directory (File class java)
-        dir.mkdir();
+        //dir.mkdir();
         File file = new File (dir, sha1);
 
         PrintWriter pw = new PrintWriter(file);
@@ -65,7 +66,7 @@ public class Blob {
         return sha1;
     }
 
-    private static String byteToHex(final byte[] hash)
+    private String byteToHex(final byte[] hash)
     {
         Formatter formatter = new Formatter();
         for (byte b : hash)
@@ -75,6 +76,10 @@ public class Blob {
         String result = formatter.toString();
         formatter.close();
         return result;
+    }
+
+    public String getSha1() {
+        return sha1;
     }
 
 }
