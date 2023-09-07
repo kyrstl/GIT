@@ -7,44 +7,35 @@ import java.util.Formatter;
 
 public class Blob {
     public Blob (String fileName) throws IOException, NoSuchAlgorithmException {
-        File myFile = new File(fileName);
+        //File myFile = new File(fileName);
 
-        //System.out.println("FILE NAME : " + fileName);
-
+        //reading file contents
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         String str = "";
 
         while(br.ready()) {
             str = str + ((char) br.read());
-            //System.out.println("READ: " + str);
         }
-
-        //System.out.println("READ FILE NAME : " + str);
 
         br.close();
 
-        /*MessageDigest md = MessageDigest.getInstance("SHA-1");
-        byte[] messageDigest = md.digest(str.getBytes());
-        BigInteger bigInt = new BigInteger(1, messageDigest);
-        String sha1 = bigInt.toString(6);*/
+        //converting to sha1
+        //String test1 = "1010";
 
-        String test1 = "1010";
-        /*byte[] b = test1.getBytes(Charset.forName("UTF-8"));
-
-        String sha1 = byteArrayToHexString(b);*/
-        String sha1 = encryptPassword(test1);
-        System.out.println("TEST BYTE: " + test1);
+        String sha1 = encryptPassword(str);
+        System.out.println("TEST BYTE: " + str);
         
         System.out.println("SHA : " + sha1);
 
-        String dirName = ".\\Git\\"+fileName;
-        File dir = new File (dirName);
+        //printing to objects folder
+        String dirName = "./objects/";
+        File dir = new File (dirName);//create this directory (File class java)
+        dir.mkdir();
         File file = new File (dir, sha1);
 
-        /*OutputStream os = new FileOutputStream(myFile);*/
         PrintWriter pw = new PrintWriter(file);
 
-        pw.print(sha1);
+        pw.print(str);
 
         pw.close();
 
@@ -52,15 +43,6 @@ public class Blob {
 
         System.out.println("\nCreating new blob " + " from content: " + sha1);
     }
-
-    /*public static String byteArrayToHexString(byte[] b) {
-        String result = "";
-        for (int i=0; i < b.length; i++) {
-          result +=
-                Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
-        }
-        return result;
-    }*/
 
       private static String encryptPassword(String password)
     {
