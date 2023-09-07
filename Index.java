@@ -42,9 +42,11 @@ public class Index {
         while(br.ready()) {
             String str = br.readLine();
             if(str.equals(newEntry)) {
+                br.close();
                 return true;
             }
         }
+        br.close();
         return false;
     }
 
