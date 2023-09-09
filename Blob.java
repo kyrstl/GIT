@@ -43,7 +43,7 @@ public class Blob {
         System.out.println("\nCreating new blob " + " from content: " + sha1);
     }
 
-      private String encryptPassword(String password)
+    private String encryptPassword(String password)
     {
         String sha1 = "";
         try
