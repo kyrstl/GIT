@@ -23,14 +23,15 @@ public class Index {
     }
 
     public boolean addBlob(String origFileName) throws NoSuchAlgorithmException, IOException {
+
         Blob bl = new Blob(origFileName);
         String newFileName = bl.getSha1();
 
         String newEntry = origFileName + " : " + newFileName;
 
         if(!entryExists(newEntry, ind)) {
-            PrintWriter pw = new PrintWriter(ind);
-            pw.println(newEntry);
+            PrintWriter pw = new PrintWriter(new FileWriter(ind, true));
+            pw.append(newEntry + "\n");
             pw.close();
             return true;
         }
@@ -59,6 +60,11 @@ public class Index {
         File inputFile = new File("index");
         File tempFile = new File("myTempFile.txt");
         
+        if(!entryExists(newEntry, ind)) {
+            return false;
+        }
+
+        //removing line
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         
