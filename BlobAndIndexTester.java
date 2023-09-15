@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class ExampleTester {
+public class BlobAndIndexTester {
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
