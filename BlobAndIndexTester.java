@@ -68,7 +68,7 @@ public class BlobAndIndexTester {
     }
 
     @Test
-    @DisplayName("[15] Test if adding a blob works.  5 for sha, 5 for file contents, 5 for correct location")
+    @DisplayName("[15] Test if adding a blob works.")
     void testCreateBlob() throws Exception {
         Path path = Path.of("junit_example_file_data.txt");
         String contents = Files.readString(path);
