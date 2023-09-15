@@ -43,7 +43,7 @@ public class Blob {
         System.out.println("\nCreating new blob " + " from content: " + sha1);
     }
 
-    private String encryptPassword(String password)
+    public static String encryptPassword(String password)
     {
         String sha1 = "";
         try
@@ -64,7 +64,7 @@ public class Blob {
         return sha1;
     }
 
-    private String byteToHex(final byte[] hash)
+    private static String byteToHex(final byte[] hash)
     {
         Formatter formatter = new Formatter();
         for (byte b : hash)

@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Tree {
@@ -48,5 +50,12 @@ public class Tree {
             }
         }
         treeContents = newContents;
+    }
+
+    public void writeToFile() throws FileNotFoundException{
+        String sha = Blob.encryptPassword(treeContents.toString());
+        File tree = new File("./objects/" + sha);
+        PrintWriter pw = new PrintWriter(tree);
+        pw.print(treeContents.toString());
     }
 }
