@@ -25,16 +25,17 @@ public class ExampleTester {
         File indexFile = new File("index");
         File objectDirectory = new File("objects");
         indexFile.delete();
-        objectDirectory.delete();         
+        deleteDirectory(objectDirectory);
+        
+    
     }
 
     @AfterAll
     static void tearDownAfterClass() throws Exception {
-        /*
-         * Utils.deleteFile("junit_example_file_data.txt");
-         * Utils.deleteFile("index");
-         * Utils.deleteDirectory("objects");
-         */
+        File indexFile = new File("index");
+        File objectDirectory = new File("objects");
+        indexFile.delete();
+        deleteDirectory(objectDirectory);
     }
 
     @Test
@@ -76,5 +77,22 @@ public class ExampleTester {
         String indexFileContents = MyUtilityClass.readAFileToAString("objects/" + file1.methodToGetSha1());
         assertEquals("File contents of Blob don't match file contents pre-blob creation", indexFileContents,
                 file1.getContents());
+    }
+
+    public static void deleteDirectory(File file)
+    {
+        // store all the paths of files and folders present
+        // inside directory
+        for (File subfile : file.listFiles()) {
+ 
+            // if it is a subfolder,e.g Rohan and Ritik,
+            //  recursively call function to empty subfolder
+            if (subfile.isDirectory()) {
+                deleteDirectory(subfile);
+            }
+ 
+            // delete files and empty subfolders
+            subfile.delete();
+        }
     }
 }
