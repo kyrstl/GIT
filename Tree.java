@@ -11,11 +11,12 @@ public class Tree {
         treeContents.append("\n" + entry);
     }
 
-    public void remove(String entry){
+    public void removeBlob(String fileToRemove){
         StringBuilder newContents = new StringBuilder();
         String[] lines = treeContents.toString().split("\\n");
         for(int i = 0; i < lines.length; i++){
-            if(!lines[i].equals(entry)){
+            String fileName = lines[i].split(" : ")[2];
+            if(!fileName.equals(fileToRemove)){
                 newContents.append("\n" + lines[i]);
             }
         }
