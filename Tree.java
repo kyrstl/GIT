@@ -15,14 +15,11 @@ public class Tree {
         StringBuilder newContents = new StringBuilder();
         String[] lines = treeContents.toString().split("\\n");
         for(int i = 0; i < lines.length; i++){
-            String fileName = lines[i].split(" : ")[2];
-            if(!fileName.equals(fileToRemove)){
+            String[] components = lines[i].split(" : ");
+            if(components.length < 3 || !components[2].equals(fileToRemove)){
                 newContents.append("\n" + lines[i]);
             }
         }
         treeContents = newContents;
     }
-
-
-
 }
