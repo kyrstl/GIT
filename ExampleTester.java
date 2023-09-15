@@ -2,10 +2,13 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Formatter;
 
 //import org.jcp.xml.dsig.internal.dom.Utils;
 import org.junit.jupiter.api.AfterAll;
@@ -18,6 +21,7 @@ public class ExampleTester {
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
         File exampleFile = new File("junit_example_file_data.txt");
+        exampleFile.createNewFile();
         PrintWriter pw = new PrintWriter(exampleFile);
         pw.write("test file contents");
         pw.close();
@@ -54,7 +58,6 @@ public class ExampleTester {
 
         // Run the person's code
         Index ind = new Index();
-        // TestHelper.runTestSuiteMethods("testInitialize");
 
         // check if the file exists
         File file = new File("index");
@@ -67,27 +70,18 @@ public class ExampleTester {
     @Test
     @DisplayName("[15] Test if adding a blob works.  5 for sha, 5 for file contents, 5 for correct location")
     void testCreateBlob() throws Exception {
+        Path path = Path.of("junit_example_file_data.txt");
+        String contents = Files.readString(path);
+        String hash = encryptPassword(contents);
 
-        try {
+        Blob blob = new Blob("junit_example_file_data.txt");
+        File file_junit1 = new File("./objects/" + hash);
+        Path testPath = Path.of("./objects/" + hash);
+        String testContents = Files.readString(testPath);
 
-            // Manually create the files and folders before the 'testAddFile'
-            // MyGitProject myGitClassInstance = new MyGitProject();
-            // myGitClassInstance.init();
+        assertTrue(file_junit1.exists());
+        assertEquals(contents, testContents);
 
-            // TestHelper.runTestSuiteMethods("testCreateBlob", file1.getName());
-
-        } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        }
-
-        // Check blob exists in the objects folder
-       // File file_junit1 = new File("objects/" + file1.methodToGetSha1());
-        //assertTrue("Blob file to add not found", file_junit1.exists());
-
-        // Read file contents
-        //String indexFileContents = MyUtilityClass.readAFileToAString("objects/" + file1.methodToGetSha1());
-       // assertEquals("File contents of Blob don't match file contents pre-blob creation", //indexFileContents,
-                //file1.getContents());
     }
 
     public static void deleteDirectory(File file)
@@ -105,5 +99,38 @@ public class ExampleTester {
             // delete files and empty subfolders
             subfile.delete();
         }
+    }
+
+    public static String encryptPassword(String password)
+    {
+        String sha1 = "";
+        try
+        {
+            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+            crypt.reset();
+            crypt.update(password.getBytes("UTF-8"));
+            sha1 = byteToHex(crypt.digest());
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+        return sha1;
+    }
+
+    private static String byteToHex(final byte[] hash)
+    {
+        Formatter formatter = new Formatter();
+        for (byte b : hash)
+        {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 }
