@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 public class Tree {
     private StringBuilder treeContents;
@@ -57,5 +56,6 @@ public class Tree {
         File tree = new File("./objects/" + sha);
         PrintWriter pw = new PrintWriter(tree);
         pw.print(treeContents.toString());
+        pw.close();
     }
 }
