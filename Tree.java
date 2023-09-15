@@ -8,7 +8,22 @@ public class Tree {
     }
 
     public void add(String entry){
-        treeContents.append("\n" + entry);
+        String[] entryComponents = entry.split(" : ");
+        String hash = entryComponents[1];
+        String fileName = "";
+        if(entryComponents.length > 2){
+            fileName = entryComponents[2];
+        }
+        String[] lines = treeContents.toString().split("\\n");
+        for(String line: lines){
+            String[] components = line.split(" : ");
+            if(components.length > 2 && !components[2].equals(fileName)){
+                treeContents.append(entry);
+            }
+            else if(components.length == 2 && !components[1].equals(hash)){
+                treeContents.append(entry);
+            }
+        }
     }
 
     public void removeBlob(String fileToRemove){
