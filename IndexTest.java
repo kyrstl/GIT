@@ -2,6 +2,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -57,6 +58,7 @@ public class IndexTest {
 
         // Run the person's code
         Index ind = new Index();
+        ind.init();
 
         // check if the file exists
         File index = new File("index");
@@ -80,6 +82,7 @@ public class IndexTest {
         File exampleFile = new File("junit_example_file_data.txt");
         Path indexPath = Path.of("index");
         Index ind = new Index();
+        ind.init();
 
         //run code
         ind.addBlob("junit_example_file_data.txt");
@@ -96,8 +99,26 @@ public class IndexTest {
     }
 
     @Test
-    void testRemoveBlob() {
+    void testRemoveBlob() throws IOException, NoSuchAlgorithmException {
+        File index = new File("index");
+        Path indexPath = Path.of("index");
 
+        PrintWriter pw = new PrintWriter(index);
+        pw.write("junit_example_file_data.txt : cbaedccfded0c768295aae27c8e5b3a0025ef340");
+        pw.close();
+
+        //run their code
+        Index ind = new Index();
+        ind.removeBlob("junit_example_file_data.txt");
+
+        //test if blob was removed from index
+        String indexContents = Files.readString(indexPath);
+        assertEquals("", indexContents);
+
+        //test if the remove function works when a blob is not in an index
+        ind.removeBlob(" : ");
+        String newIndexContents = Files.readString(indexPath);
+        assertEquals("", indexContents);
     }
 
     public static void deleteDirectory(File file)
