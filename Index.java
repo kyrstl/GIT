@@ -10,6 +10,10 @@ import java.security.NoSuchAlgorithmException;
 public class Index {
     private File ind = new File("index");
     public Index () throws IOException {
+        
+    }
+
+    public void init() throws IOException{
         //File ind = new File("index");
 
         if(!ind.exists()) {
