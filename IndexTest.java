@@ -1,14 +1,24 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class IndexTest {
-    @BeforeAll
-    static void setUpBeforeClass() throws IOException{
+    @BeforeEach
+    void setUpBeforeClass() throws IOException{
         File exampleFile = new File("junit_example_file_data.txt");
         exampleFile.createNewFile();
         PrintWriter pw = new PrintWriter(exampleFile);
@@ -27,8 +37,8 @@ public class IndexTest {
         }
     }
 
-    @AfterAll
-    static void tearDownAfterClass() throws Exception {
+    @AfterEach
+    void tearDownAfterClass() throws Exception {
         File indexFile = new File("index");
         File objectDirectory = new File("objects");
         
@@ -40,10 +50,49 @@ public class IndexTest {
             deleteDirectory(objectDirectory);
         }
     }
-    
-    @Test
-    void testAddBlob() {
 
+    @Test
+    @DisplayName("[8] Test if index and objects folder initialized correctly")
+    void testInitialize() throws Exception {
+
+        // Run the person's code
+        Index ind = new Index();
+
+        // check if the file exists
+        File index = new File("index");
+        Path indexPath = Path.of("index");
+        String contents = Files.readString(indexPath);
+
+        File dir = new File("objects");
+        int filesInDir = dir.listFiles().length;
+
+        //checks if the index file  and objects folder exists
+        assertTrue(index.exists());
+        assertTrue(dir.exists());
+
+        //check if the index file and bjects folder is empty
+        assertEquals(0, filesInDir);
+        assertEquals("", contents);
+    }
+
+    @Test
+    void testAddBlob() throws IOException, NoSuchAlgorithmException {
+        File exampleFile = new File("junit_example_file_data.txt");
+        Path indexPath = Path.of("index");
+        Index ind = new Index();
+
+        //run code
+        ind.addBlob("junit_example_file_data.txt");
+
+        //check if index was updated
+        String correctIndexEntry = "junit_example_file_data.txt : cbaedccfded0c768295aae27c8e5b3a0025ef340";
+        String indexContents = Files.readString(indexPath);
+        assertTrue(correctIndexEntry.equals(indexContents) || (correctIndexEntry + "\n").equals(indexContents));
+
+        //attempt to add the same item again
+        ind.addBlob("junit_example_file_data.txt");
+        String newIndexContents = Files.readString(indexPath);
+        assertTrue(correctIndexEntry.equals(indexContents) || (correctIndexEntry + "\n").equals(indexContents));
     }
 
     @Test
