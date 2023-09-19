@@ -80,8 +80,16 @@ public class TreeTest {
     }
 
     @Test
-    void testWriteToFile() {
+    void testWriteToFile() throws FileNotFoundException {
+        String blobStr = "blob : cbaedccfded0c768295aae27c8e5b3a0025ef340 : junit_example_file_data.txt";
 
+        //run their code
+        Tree tree = new Tree();
+        tree.add(blobStr);
+        tree.writeToFile();
+
+        File file = new File("./objects/94eb3ffa9b13aef9097430513a0401557f36b79b");
+        assertTrue(file.exists());
     }
 
     public static void deleteDirectory(File file)
