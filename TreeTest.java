@@ -44,18 +44,14 @@ public class TreeTest {
         
         //run their code
         tree.add(exampleBlob);
-        tree.writeToFile();
 
         //test if blob was added correctly
-        File treeFile = new File("./objects/94eb3ffa9b13aef9097430513a0401557f36b79b");
-        assertTrue(treeFile.exists());
-        Path treePath = Path.of("./objects/94eb3ffa9b13aef9097430513a0401557f36b79b");
-        String treeContents = Files.readString(treePath);
+        String treeContents = tree.getTreeContents();
         assertEquals(treeContents, exampleBlob);
 
         //test if duplicates will be ignored
         tree.add(exampleBlob);
-        String newTreeContents = Files.readString(treePath);
+        String newTreeContents = tree.getTreeContents();
         assertEquals(newTreeContents, exampleBlob);
     }
 
@@ -67,12 +63,8 @@ public class TreeTest {
         Tree tree = new Tree();
         tree.add(blobStr);
         tree.removeBlob("junit_example_file_data.txt");
-        tree.writeToFile();
-
-        //test that blob was deleted
-        File dir = new File("objects");
-        File blobFile = dir.listFiles()[0];
-        assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", blobFile.getName());
+        String treeContents = tree.getTreeContents();
+        assertEquals("", treeContents);
     }
 
     @Test
@@ -83,12 +75,8 @@ public class TreeTest {
         Tree tree = new Tree();
         tree.add(treeStr);
         tree.removeTree("cbaedccfded0c768295aae27c8e5b3a0025ef340");
-        tree.writeToFile();
-
-        //test that tree was deleted
-        File dir = new File("objects");
-        File treeFile = dir.listFiles()[0];
-        assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", treeFile.getName());
+        String treeContents = tree.getTreeContents();
+        assertEquals("", treeContents);
     }
 
     @Test

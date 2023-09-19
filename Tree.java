@@ -62,4 +62,8 @@ public class Tree {
         pw.print(treeContents.toString());
         pw.close();
     }
+
+    public String getTreeContents(){
+        return treeContents.toString();
+    }
 }
