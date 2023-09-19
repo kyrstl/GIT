@@ -56,6 +56,7 @@ public class TreeTest {
     }
 
     @Test
+    @DisplayName("Test if removing blob works")
     void testRemoveBlob() throws FileNotFoundException {
         String blobStr = "blob : cbaedccfded0c768295aae27c8e5b3a0025ef340 : junit_example_file_data.txt";
 
@@ -68,6 +69,7 @@ public class TreeTest {
     }
 
     @Test
+    @DisplayName("Test if removing tree works")
     void testRemoveTree() throws FileNotFoundException {
         String treeStr = "tree : cbaedccfded0c768295aae27c8e5b3a0025ef340";
 
@@ -80,6 +82,7 @@ public class TreeTest {
     }
 
     @Test
+    @DisplayName("Test if writing to file works")
     void testWriteToFile() throws FileNotFoundException {
         String blobStr = "blob : cbaedccfded0c768295aae27c8e5b3a0025ef340 : junit_example_file_data.txt";
 

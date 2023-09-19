@@ -53,7 +53,7 @@ public class IndexTest {
     }
 
     @Test
-    @DisplayName("[8] Test if index and objects folder initialized correctly")
+    @DisplayName("Test if index and objects folder initialized correctly")
     void testInitialize() throws Exception {
 
         // Run the person's code
@@ -78,6 +78,7 @@ public class IndexTest {
     }
 
     @Test
+    @DisplayName("Tests if blob is added to index correctly")
     void testAddBlob() throws IOException, NoSuchAlgorithmException {
         File exampleFile = new File("junit_example_file_data.txt");
         Path indexPath = Path.of("index");
@@ -99,6 +100,7 @@ public class IndexTest {
     }
 
     @Test
+    @DisplayName("Tests if blob is removed from index correctly")
     void testRemoveBlob() throws IOException, NoSuchAlgorithmException {
         File index = new File("index");
         Path indexPath = Path.of("index");
@@ -121,6 +123,7 @@ public class IndexTest {
         assertEquals("", indexContents);
     }
 
+    //helper method to remove an entire directory and all files contained in it
     public static void deleteDirectory(File file)
     {
         // store all the paths of files and folders present
