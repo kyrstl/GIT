@@ -57,9 +57,6 @@ public class Tree {
 
     public void writeToFile() throws FileNotFoundException{
         String sha = Blob.encryptPassword(treeContents.toString());
-        System.out.println(treeContents.toString());
-        //System.out.println("This is working");
-        //System.out.println(sha);
         File tree = new File("./objects/" + sha);
         PrintWriter pw = new PrintWriter(tree);
         pw.print(treeContents.toString());

@@ -10,13 +10,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TreeTest {
-    @BeforeAll
-    static void setUpBeforeClass() throws Exception {
+    @BeforeEach
+    void setUpBeforeClass() throws Exception {
         File dir  = new File("objects");
         dir.mkdir();
 
@@ -27,8 +29,8 @@ public class TreeTest {
         pw.close();
     }
 
-    @AfterAll
-    static void tearDownAfterClass() throws Exception {
+    @AfterEach
+    void tearDownAfterClass() throws Exception {
         File dir  = new File("objects");
         deleteDirectory(dir);
     }
@@ -58,13 +60,35 @@ public class TreeTest {
     }
 
     @Test
-    void testRemoveBlob() {
+    void testRemoveBlob() throws FileNotFoundException {
+        String blobStr = "blob : cbaedccfded0c768295aae27c8e5b3a0025ef340 : junit_example_file_data.txt";
 
+        //run their code
+        Tree tree = new Tree();
+        tree.add(blobStr);
+        tree.removeBlob("junit_example_file_data.txt");
+        tree.writeToFile();
+
+        //test that blob was deleted
+        File dir = new File("objects");
+        File blobFile = dir.listFiles()[0];
+        assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", blobFile.getName());
     }
 
     @Test
-    void testRemoveTree() {
+    void testRemoveTree() throws FileNotFoundException {
+        String treeStr = "tree : cbaedccfded0c768295aae27c8e5b3a0025ef340";
 
+        //run their code
+        Tree tree = new Tree();
+        tree.add(treeStr);
+        tree.removeTree("cbaedccfded0c768295aae27c8e5b3a0025ef340");
+        tree.writeToFile();
+
+        //test that tree was deleted
+        File dir = new File("objects");
+        File treeFile = dir.listFiles()[0];
+        assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709", treeFile.getName());
     }
 
     @Test
