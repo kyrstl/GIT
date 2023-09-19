@@ -23,9 +23,8 @@ public class Index {
         String dirName = "./objects/";
         File dir = new File (dirName);
         dir.mkdir();
-
     }
-
+    
     public boolean addBlob(String origFileName) throws NoSuchAlgorithmException, IOException {
 
         Blob bl = new Blob(origFileName);

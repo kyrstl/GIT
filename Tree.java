@@ -15,15 +15,19 @@ public class Tree {
         if(entryComponents.length > 2){
             fileName = entryComponents[2];
         }
-        String[] lines = treeContents.toString().split("\\n");
+        String[] lines = treeContents.toString().split("\n");
+        Boolean duplicate = false;
         for(String line: lines){
             String[] components = line.split(" : ");
-            if(components.length > 2 && !components[2].equals(fileName)){
-                treeContents.append(entry);
+            if(components.length > 2 && components[2].equals(fileName)){
+                duplicate = true;
             }
-            else if(components.length == 2 && !components[1].equals(hash)){
-                treeContents.append(entry);
+            else if(components.length == 2 && components[1].equals(hash)){
+                duplicate = true;
             }
+        }
+        if(!duplicate){
+            treeContents.append(entry);
         }
     }
 
@@ -53,6 +57,9 @@ public class Tree {
 
     public void writeToFile() throws FileNotFoundException{
         String sha = Blob.encryptPassword(treeContents.toString());
+        System.out.println(treeContents.toString());
+        //System.out.println("This is working");
+        //System.out.println(sha);
         File tree = new File("./objects/" + sha);
         PrintWriter pw = new PrintWriter(tree);
         pw.print(treeContents.toString());

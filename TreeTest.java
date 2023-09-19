@@ -20,7 +20,7 @@ public class TreeTest {
         File dir  = new File("objects");
         dir.mkdir();
 
-        File exampleFile = new File("./objects/junit_example_file_data.txt");
+        File exampleFile = new File("junit_example_file_data.txt");
         exampleFile.createNewFile();
         PrintWriter pw = new PrintWriter(exampleFile);
         pw.write("test file contents");
@@ -34,7 +34,7 @@ public class TreeTest {
     }
 
     @Test
-     @DisplayName("Test if adding to tree works")
+    @DisplayName("Test if adding to tree works")
     void testAdd() throws IOException {
         //add blob and initialize
         Tree tree = new Tree();
