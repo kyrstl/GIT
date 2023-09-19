@@ -10,6 +10,10 @@ import java.security.NoSuchAlgorithmException;
 public class Index {
     private File ind = new File("index");
     public Index () throws IOException {
+        
+    }
+
+    public void init() throws IOException{
         //File ind = new File("index");
 
         if(!ind.exists()) {
@@ -19,9 +23,8 @@ public class Index {
         String dirName = "./objects/";
         File dir = new File (dirName);
         dir.mkdir();
-
     }
-
+    
     public boolean addBlob(String origFileName) throws NoSuchAlgorithmException, IOException {
 
         Blob bl = new Blob(origFileName);

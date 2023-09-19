@@ -1,0 +1,58 @@
+[
+    {
+        "className": "Blob",
+        "constructorConfigs": [
+            {
+                "parameterTypes": ["String"],
+                "values": ["fileName"]
+            }
+        ],
+        "methodConfigs": [
+            {
+                "methodName": "encryptPassword",
+                "parameters": ["String"],
+                "values": ["password"]
+            },
+            {
+                "methodName": "byteToHex",
+                "parameters": ["byte[]"],
+                "values": ["[00000000, 11111111]"]
+            },
+            {
+                "methodName": "getSha1",
+                "parameters": [],
+                "values": []
+            }
+        ]
+    },
+    {
+        "className": "Index",
+        "constructorConfigs": [
+            {
+                "parameterTypes": [
+                    "String"
+                ],
+                "values": [
+                    "index"
+                ]
+            }
+        ],
+        "methodConfigs": [
+            {
+                "methodName": "addBlob",
+                "parameters": ["String"],
+                "values": ["origFileName"]
+            },
+            {
+                "methodName": "entryExists",
+                "parameters": ["String", "File"],
+                "values": ["newEntry", "index"]
+            },
+            {
+                "methodName": "removeBlob",
+                "parameters": ["String"],
+                "values": ["origFileName"]
+            }
+        ]
+    }
+]
