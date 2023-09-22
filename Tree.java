@@ -70,4 +70,57 @@ public class Tree {
     public String getTreeContents(){
         return treeContents.toString();
     }
+
+    public String printToFile(String directoryPath) {
+        File dir = new File("/path/to/dir");
+        //showFiles(dir.listFiles());
+
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                //print folder sha
+                addDirectory(files);
+            } else {
+                String blobName = file.getName();
+                add(blobName);
+            }
+        }
+
+
+        return "";
+    }
+
+    /*public void main(String... args) {
+        File dir = new File("/path/to/dir");
+        //showFiles(dir.listFiles());
+
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                //print folder sha
+                addDirectory(files);
+            } else {
+                String blobName = file.getName();
+                add(blobName);
+            }
+        }
+
+    }*/
+
+    public void addDirectory(File[] files) {
+        for (File file : files) {
+            if (file.isDirectory()) {
+                //System.out.println("Directory: " + file.getAbsolutePath());
+                String treeName = file.getName();
+                //add(treeName);//is this right????
+                String sha = printToFile(treeName);
+                add(sha);
+                addDirectory(file.listFiles()); // Calls same method again.
+            } else {
+                //System.out.println("File: " + file.getAbsolutePath());
+                String blobName = file.getName();
+                add(blobName);
+            }
+        }
+    }
 }

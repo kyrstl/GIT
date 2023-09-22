@@ -54,7 +54,7 @@ public class CommitTester {
 
     @Test
     void testCommitOtherConstructor() throws Exception {
-        Commit commit = new Commit("Jake Parker", "This is my commit.")
+        Commit commit = new Commit("Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
         assertTrue(new File("/objects/" + sCommitSha).exists());
