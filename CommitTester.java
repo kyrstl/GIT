@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -36,12 +38,34 @@ public class CommitTester {
 
     @Test
     void testCommit() throws Exception {
-        Commit(String sParentSha, String sAuthor, String sSummary)
+        Commit commit = new Commit("f924e482dd33576fd0de90b6376f1671b08b5f52", "Jake Parker", "This is my commit.");
+        commit.commit();
+        String sCommitSha = commit.getCommitSha();
+        assertTrue(new File("/objects/" + sCommitSha).exists());
+        assertEquals(
+            commit.constructTreeSha()                  + "\n" +
+            "f924e482dd33576fd0de90b6376f1671b08b5f52" + "\n" +
+            "Jake Parker"                              + "\n" +
+            "22/09/2023"                               + "\n" +
+            "This is my commit."                       + "\n",
+            Files.readString(Paths.get("/objects/" + sCommitSha))
+        );
     }
 
     @Test
     void testCommitOtherConstructor() throws Exception {
-        Commit(String sAuthor, String sSummary)
+        Commit commit = new Commit("Jake Parker", "This is my commit.")
+        commit.commit();
+        String sCommitSha = commit.getCommitSha();
+        assertTrue(new File("/objects/" + sCommitSha).exists());
+        assertEquals(
+            commit.constructTreeSha() + "\n" +
+            ""                        + "\n" +
+            "Jake Parker"             + "\n" +
+            "22/09/2023"              + "\n" +
+            "This is my commit."      + "\n",
+            Files.readString(Paths.get("/objects/" + sCommitSha))
+        );
     }
 
     @Test
