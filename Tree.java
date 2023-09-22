@@ -63,6 +63,10 @@ public class Tree {
         pw.close();
     }
 
+    public String getSha() {
+        return Blob.encryptPassword(treeContents.toString());
+    }
+
     public String getTreeContents(){
         return treeContents.toString();
     }
