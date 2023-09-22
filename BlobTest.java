@@ -62,7 +62,7 @@ public class BlobTest {
         assertEquals("test file contents", contents);
     }
 
-    private static void deleteDirectory(File file)
+    public static void deleteDirectory(File file)
     {
         // store all the paths of files and folders present
         // inside directory

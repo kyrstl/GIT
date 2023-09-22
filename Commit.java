@@ -3,8 +3,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;  
 
 public class Commit {
-    private String sTreeSha, sParentSha, sChildSha, sAuthor, sDate, sSummary;
-
+    private String sTreeSha, sParentSha, sChildSha, sAuthor, sDate, sSummary, sCommitSha;
     public Commit(String sParentSha, String sAuthor, String sSummary) {
         this.sTreeSha = constructTreeSha();
         this.sParentSha = sParentSha;
@@ -27,16 +26,16 @@ public class Commit {
             this.sSummary
         );
 
-        String sCommitSha = Blob.encryptPassword(sCommit.toString());
+        this.sCommitSha = Blob.encryptPassword(sCommit.toString());
 
         sCommit.insert(sCommit.indexOf("\n", sCommit.indexOf("\n") + 1), this.sChildSha + "\n");
 
-        FileWriter f_writer = new FileWriter("objects/" + sCommitSha);
+        FileWriter f_writer = new FileWriter("objects/" + this.sCommitSha);
         f_writer.write(sCommit.toString());
         f_writer.close();
     }
 
-    public String getDate() {
+    public static String getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
         Date date = new Date();  
         return sdf.format(date);  
@@ -45,5 +44,9 @@ public class Commit {
     public String constructTreeSha() {
         Tree tree = new Tree();
         return tree.getSha();
+    }
+
+    public String getCommitSha() {
+        return this.sCommitSha;
     }
 }
