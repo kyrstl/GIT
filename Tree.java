@@ -72,22 +72,30 @@ public class Tree {
     }
 
     public String printToFile(String directoryPath) {
-        File dir = new File("/path/to/dir");
+        File dir = new File(directoryPath);
         //showFiles(dir.listFiles());
 
+        //SHOULD add inout directoryPath?
         File[] files = dir.listFiles();
+        //addDirectory(files);
         for (File file : files) {
             if (file.isDirectory()) {
-                //print folder sha
-                addDirectory(files);
+                //System.out.println("Directory: " + file.getAbsolutePath());
+                String treePath = file.getAbsolutePath();
+                //String treeName = file.getName();
+                //add(treeName);//is this right????
+                Tree childTree = new Tree();
+                String sha = childTree.printToFile(treePath);
+                add("tree : " + sha + " : " + treePath);
+                printToFile(treePath); // Calls same method again.
             } else {
                 String blobName = file.getName();
-                add(blobName);
+                add("blob : " + blobName + " : " + blobName);
             }
         }
 
 
-        return "";
+        return getSha();
     }
 
     /*public void main(String... args) {
@@ -107,13 +115,14 @@ public class Tree {
 
     }*/
 
-    public void addDirectory(File[] files) {
+    /*public void addDirectory(File[] files) {
         for (File file : files) {
             if (file.isDirectory()) {
                 //System.out.println("Directory: " + file.getAbsolutePath());
                 String treeName = file.getName();
                 //add(treeName);//is this right????
-                String sha = printToFile(treeName);
+                Tree childTree = new Tree();
+                String sha = childTree.printToFile(treeName);
                 add(sha);
                 addDirectory(file.listFiles()); // Calls same method again.
             } else {
@@ -122,5 +131,5 @@ public class Tree {
                 add(blobName);
             }
         }
-    }
+    }*/
 }

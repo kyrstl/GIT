@@ -58,6 +58,7 @@ public class BlobAndIndexTester {
 
         // Run the person's code
         Index ind = new Index();
+        ind.init();
 
         // check if the file exists
         File file = new File("index");
