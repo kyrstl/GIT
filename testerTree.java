@@ -21,9 +21,6 @@ public class testerTree {
             file.createNewFile();
         }
         addFileContents("hello.txt", "derpderpderp");
-        PrintWriter pw = new PrintWriter(new FileWriter("hello.txt"));
-        pw.print("derpderpderp");
-        pw.close();
 
 
         File file2 = new File (dir, "blob.txt");
@@ -45,7 +42,7 @@ public class testerTree {
     }
 
     public static void addFileContents(String fileName, String contents) throws IOException {
-        PrintWriter pw = new PrintWriter(new FileWriter(fileName));
+        PrintWriter pw = new PrintWriter(fileName);
         pw.print(contents);
         pw.close();
     }

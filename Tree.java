@@ -84,10 +84,10 @@ public class Tree {
                 String treePath = file.getAbsolutePath();
                 //String treeName = file.getName();
                 //add(treeName);//is this right????
-                Tree childTree = new Tree();
-                String sha = childTree.printToFile(treePath);
+                //Tree childTree = new Tree();
+                String sha = printToFile(treePath);
                 add("tree : " + sha + " : " + treePath);
-                printToFile(treePath); // Calls same method again.
+                //printToFile(treePath); // Calls same method again.
             } else {
                 String blobName = file.getName();
                 add("blob : " + blobName + " : " + blobName);

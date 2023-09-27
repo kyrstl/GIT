@@ -111,4 +111,15 @@ public class TreeTest {
             subfile.delete();
         }
     }
+
+    @Test
+    @DisplayName("Test if adding files and folders to directory works")
+    void addDirectory() {
+        Tree tree = new Tree();
+        
+
+        File file = new File("./objects/94eb3ffa9b13aef9097430513a0401557f36b79b");
+        assertTrue(file.exists());
+    }
+
 }
