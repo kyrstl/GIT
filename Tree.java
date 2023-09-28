@@ -71,7 +71,7 @@ public class Tree {
         return treeContents.toString();
     }
 
-    public String printToFile(String directoryPath) {
+    public String addDirectory(String directoryPath) {
         File dir = new File(directoryPath);
         //showFiles(dir.listFiles());
 
@@ -85,9 +85,9 @@ public class Tree {
                 //String treeName = file.getName();
                 //add(treeName);//is this right????
                 //Tree childTree = new Tree();
-                String sha = printToFile(treePath);
+                String sha = addDirectory(treePath);
                 add("tree : " + sha + " : " + treePath);
-                //printToFile(treePath); // Calls same method again.
+                //addDirectory(treePath); // Calls same method again.
             } else {
                 String blobName = file.getName();
                 add("blob : " + blobName + " : " + blobName);

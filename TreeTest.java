@@ -124,8 +124,18 @@ public class TreeTest {
         assertTrue(file.exists());
         String cont = "";
         BufferedReader br = new BufferedReader(new FileReader(file));
-        
-        assertTrue();
+        while(br.ready()) {
+            cont += br.readLine();
+        }
+        br.close();
+
+        assertTrue(cont.equals("derpderpderp"));
+
+        String dirName = "./testPath/";
+        tree.addDirectory(dirName);
+
+        String sha = tree.getSha();
+        assertTrue(sha.equals(""));
     }
 
     public static void createTest() throws IOException {
@@ -140,7 +150,7 @@ public class TreeTest {
         addFileContents("hello.txt", "derpderpderp");
 
 
-        /*File file2 = new File (dir, "blob.txt");
+        File file2 = new File (dir, "blob.txt");
         if(!file2.exists()) {
             file2.createNewFile();
         }
@@ -154,7 +164,7 @@ public class TreeTest {
         if(!file3.exists()) {
             file3.createNewFile();
         }
-        addFileContents("BLOB.txt", "hello");*/
+        addFileContents("BLOB.txt", "hello");
     }
 
     public static void addFileContents(String fileName, String contents) throws IOException {
