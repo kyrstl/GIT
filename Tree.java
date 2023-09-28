@@ -72,6 +72,7 @@ public class Tree {
     }
 
     public String addDirectory(String directoryPath) {
+        //ADD directoryPath??
         File dir = new File(directoryPath);
         //showFiles(dir.listFiles());
 
@@ -82,11 +83,18 @@ public class Tree {
             if (file.isDirectory()) {
                 //System.out.println("Directory: " + file.getAbsolutePath());
                 String treePath = file.getAbsolutePath();
+                String treeName = file.getName();
                 //String treeName = file.getName();
                 //add(treeName);//is this right????
                 //Tree childTree = new Tree();
-                String sha = addDirectory(treePath);
-                add("tree : " + sha + " : " + treePath);
+                String sha = addDirectory(treePath);//????????
+                if(!treeName.equals("")) { //how do i know theres a tree name??
+                    add("tree : " + sha + " : " + treeName);
+                }
+                else {
+                    add("tree : " + sha);
+                }
+                
                 //addDirectory(treePath); // Calls same method again.
             } else {
                 String blobName = file.getName();
