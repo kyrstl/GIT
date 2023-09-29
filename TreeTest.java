@@ -134,7 +134,7 @@ public class TreeTest {
         String dirName = "./testPath/";
         tree.addDirectory(dirName);
 
-        String sha = tree.getSha();
+        String sha = tree.getSha();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
         assertTrue(sha.equals("0a6b515b8f17fd7e8996127ccbd4d0de6bc0eb02"));
     }
 
