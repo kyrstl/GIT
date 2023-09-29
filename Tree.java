@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 
 public class Tree {
     private StringBuilder treeContents;
@@ -71,7 +73,7 @@ public class Tree {
         return treeContents.toString();
     }
 
-    public String addDirectory(String directoryPath) {
+    public String addDirectory(String directoryPath) throws NoSuchAlgorithmException, IOException {
         //ADD directoryPath??
         File dir = new File(directoryPath);
         //showFiles(dir.listFiles());
@@ -86,8 +88,8 @@ public class Tree {
                 String treeName = file.getName();
                 //String treeName = file.getName();
                 //add(treeName);//is this right????
-                //Tree childTree = new Tree();
-                String sha = addDirectory(treePath);//????????
+                Tree childTree = new Tree();
+                String sha = childTree.addDirectory(treePath);//????????
                 if(!treeName.equals("")) { //how do i know theres a tree name??
                     add("tree : " + sha + " : " + treeName);
                 }
@@ -95,10 +97,11 @@ public class Tree {
                     add("tree : " + sha);
                 }
                 
-                //addDirectory(treePath); // Calls same method again.
+                addDirectory(treePath); // Calls same method again.
             } else {
                 String blobName = file.getName();
-                add("blob : " + blobName + " : " + blobName);
+                Blob blob = new Blob(blobName);
+                add("blob : " + blob.getSha1() + " : " + blobName);
             }
         }
 

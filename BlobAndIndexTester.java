@@ -83,6 +83,7 @@ public class BlobAndIndexTester {
         assertTrue(file_junit1.exists());
         assertEquals(contents, testContents);
 
+
     }
 
     public static void deleteDirectory(File file)

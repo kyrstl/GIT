@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +30,24 @@ public class TreeTest {
         PrintWriter pw = new PrintWriter(exampleFile);
         pw.write("test file contents");
         pw.close();
+
+        //addDirecotry tset
+        String dirName = "./test1/";
+        File dir1 = new File (dirName);//create this directory (File class java)
+        dir1.mkdir();
+        
+        File file1 = new File (dir1, "file1.txt");
+        if(!file1.exists()) {
+            file1.createNewFile();
+        }
+        File file2 = new File (dir1, "file2.txt");
+        if(!file2.exists()) {
+            file2.createNewFile();
+        }
+        File file3 = new File (dir1, "file3.txt");
+        if(!file3.exists()) {
+            file3.createNewFile();
+        }
     }
 
     @AfterEach
@@ -116,6 +135,17 @@ public class TreeTest {
 
     @Test
     @DisplayName("Test if adding files and folders to directory works")
+    void addDirectory() throws IOException, NoSuchAlgorithmException {
+        Tree tree = new Tree();
+        String sha = tree.addDirectory("test1");
+
+        String expectedSha = "3cd080b77203026ce878c5fed5d6a29a0479b410";
+
+        assertEquals(sha, expectedSha);
+    }
+
+    /*@Test
+    @DisplayName("Test if adding files and folders to directory works")
     void addDirectory() throws IOException {
         Tree tree = new Tree();
         createTest();
@@ -171,6 +201,6 @@ public class TreeTest {
         PrintWriter pw = new PrintWriter(fileName);
         pw.print(contents);
         pw.close();
-    }
+    }*/
 
 }
