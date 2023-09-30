@@ -1,11 +1,17 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;  
 import java.util.Date;  
 
 public class Commit {
     private String sTreeSha, sParentSha, sChildSha, sAuthor, sDate, sSummary, sCommitSha;
-    public Commit(String sParentSha, String sAuthor, String sSummary) {
-        this.sTreeSha = constructTreeSha();
+    public Commit(String sParentSha, String sAuthor, String sSummary, Index index) throws IOException, NoSuchAlgorithmException {
+        this.sTreeSha = constructTreeSha(index);
         this.sParentSha = sParentSha;
         this.sChildSha = "";
         this.sAuthor = sAuthor;
@@ -13,8 +19,8 @@ public class Commit {
         this.sSummary = sSummary;
     }
 
-    public Commit(String sAuthor, String sSummary) {
-        this("", sAuthor, sSummary);
+    public Commit(String sAuthor, String sSummary, Index index) throws IOException, NoSuchAlgorithmException {
+        this("", sAuthor, sSummary, index);
     }
 
     public void commit() throws Exception {
@@ -41,8 +47,24 @@ public class Commit {
         return sdf.format(date);  
     }
 
-    public String constructTreeSha() {
+    public String constructTreeSha(Index index) throws IOException, NoSuchAlgorithmException {
         Tree tree = new Tree();
+
+        BufferedReader br = new BufferedReader(new FileReader("index"));
+        while(br.ready()) {
+            String str = br.readLine();
+            String type = str.substring(0,4);
+            if(type.equals("tree")) {
+                String entryName = str.substring(47);
+                tree.addDirectory(entryName);
+            }
+            else {
+                tree.add(str);//why cant i just do this? whats the point of addDirecotry?
+            }
+            index.removeBlob(str);
+        }
+        br.close();
+
         return tree.getSha();
     }
 
