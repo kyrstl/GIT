@@ -26,18 +26,28 @@ public class Index {
     }
     
     public boolean addBlob(String origFileName) throws NoSuchAlgorithmException, IOException {
+        File entry = new File(origFileName);
 
-        Blob bl = new Blob(origFileName);
-        String newFileName = bl.getSha1();
-
-        String newEntry = origFileName + " : " + newFileName;
-
-        if(!entryExists(newEntry, ind)) {
-            PrintWriter pw = new PrintWriter(new FileWriter(ind, true));
-            pw.append(newEntry + "\n");
-            pw.close();
-            return true;
+        String newEntry = "";
+        String shaFileName = "";
+        if(entry.isDirectory()) {
+            Tree tree = new Tree();
+            shaFileName = tree.getSha();
+            newEntry = "tree : " + shaFileName + " : " + origFileName;
         }
+        else {
+            Blob blob = new Blob(origFileName);
+            shaFileName = blob.getSha1();
+
+            newEntry = "blob : " + shaFileName + " : " + origFileName;
+        }
+        if(!entryExists(newEntry, ind)) {
+                PrintWriter pw = new PrintWriter(new FileWriter(ind, true));
+                pw.append(newEntry + "\n");
+                pw.close();
+                return true;
+        }
+        
         return false;
     }
 

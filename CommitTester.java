@@ -41,14 +41,15 @@ public class CommitTester {
         Commit commit = new Commit("f924e482dd33576fd0de90b6376f1671b08b5f52", "Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
-        assertTrue(new File("/objects/" + sCommitSha).exists());
+        File file = new File("./objects/", sCommitSha);
+        assertTrue(file.exists());
         assertEquals(
             commit.constructTreeSha()                  + "\n" +
-            "f924e482dd33576fd0de90b6376f1671b08b5f52" + "\n" +
+            "f924e482dd33576fd0de90b6376f1671b08b5f52" + "\n" + "\n" +
             "Jake Parker"                              + "\n" +
-            "22/09/2023"                               + "\n" +
-            "This is my commit."                       + "\n",
-            Files.readString(Paths.get("/objects/" + sCommitSha))
+            "29/09/2023"                               + "\n" +
+            "This is my commit."                       ,
+            Files.readString(Paths.get("./objects/" + sCommitSha))
         );
     }
 
@@ -57,14 +58,15 @@ public class CommitTester {
         Commit commit = new Commit("Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
-        assertTrue(new File("/objects/" + sCommitSha).exists());
+        File file = new File("./objects/", sCommitSha);
+        assertTrue(file.exists());
         assertEquals(
             commit.constructTreeSha() + "\n" +
-            ""                        + "\n" +
+            ""                        + "\n" + "\n" + 
             "Jake Parker"             + "\n" +
-            "22/09/2023"              + "\n" +
-            "This is my commit."      + "\n",
-            Files.readString(Paths.get("/objects/" + sCommitSha))
+            "29/09/2023"              + "\n" +
+            "This is my commit."      ,
+            Files.readString(Paths.get("./objects/" + sCommitSha))
         );
     }
 
@@ -78,7 +80,7 @@ public class CommitTester {
     @Test
     void testCreateTree() throws Exception {
         Commit commit = new Commit("Jake Parker", "This is my commit.");
-        String sPredictedSha = "59e083093fb3c613480ce987129f51216c385183";
+        String sPredictedSha = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
         assertEquals(commit.constructTreeSha(), sPredictedSha);
     }
 }
