@@ -49,6 +49,10 @@ public class TreeTest {
         if(!file3.exists()) {
             file3.createNewFile();
         }*/
+
+        String subName = "./subpath/";
+        File subdir = new File (dir,subName);
+        subdir.mkdir();
     }
 
     @AfterEach
@@ -73,6 +77,10 @@ public class TreeTest {
         file2a.delete();
         File file3a = new File ("file3.txt");
         file3a.delete();
+
+        String subName = "./subpath/";
+        File subdir = new File (dir,subName);
+        deleteDirectory(subdir);
     }
 
     @Test
@@ -178,11 +186,12 @@ public class TreeTest {
 
         String cont = tree.getTreeContents();
 
-        String expectedSha = "b8080d9ddb95805fa4f4d806ec3e5e25edc30131";
+        String expectedSha = "0f7991be4779c65f417dd770d9d1bb5d049c1542";
 
         tree.removeBlob("file1.txt");
         tree.removeBlob("file2.txt");
-        tree.removeBlob("file3.txt");
+        //tree.removeTree("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+        //tree.removeBlob("file3.txt");
 
         assertEquals(expectedSha, sha);
     }

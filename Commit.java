@@ -56,7 +56,7 @@ public class Commit {
             String type = str.substring(0,4);
             if(type.equals("tree")) {
                 String entryName = str.substring(47);
-                tree.addDirectory(entryName);
+                tree.addDirectory(entryName);//wouldn't this add all things in that directory? but those same files would be in Index too? that would be duplicated? OH, TREE CANT DO DUPLICATE ok got it
             }
             else {
                 tree.add(str);//why cant i just do this? whats the point of addDirecotry?
