@@ -11,26 +11,35 @@ public class Tree {
     }
 
     public void add(String entry){
-        String[] entryComponents = entry.split(" : ");
-        String hash = entryComponents[1];
-        String fileName = "";
-        if(entryComponents.length > 2){
-            fileName = entryComponents[2];
+        //only add if no duplicates
+        String convertedStr = treeContents.toString();
+        if(convertedStr.contains(entry)) {
+
         }
-        String[] lines = treeContents.toString().split("\n");
-        Boolean duplicate = false;
-        for(String line: lines){
-            String[] components = line.split(" : ");
-            if(components.length > 2 && components[2].equals(fileName)){
-                duplicate = true;
+        else {
+            String[] entryComponents = entry.split(" : ");
+            String hash = entryComponents[1];
+            String fileName = "";
+            if(entryComponents.length > 2){
+                fileName = entryComponents[2];
             }
-            else if(components.length == 2 && components[1].equals(hash)){
-                duplicate = true;
+            String[] lines = treeContents.toString().split("\n");
+            Boolean duplicate = false;
+            for(String line: lines){
+                String[] components = line.split(" : ");
+                if(components.length > 2 && components[2].equals(fileName)){
+                    duplicate = true;
+                }
+                else if(components.length == 2 && components[1].equals(hash)){
+                    duplicate = true;
+                }
+            }
+            if(!duplicate){
+                treeContents.append(entry);
             }
         }
-        if(!duplicate){
-            treeContents.append(entry);
-        }
+
+        
     }
 
     public void removeBlob(String fileToRemove){
@@ -91,20 +100,31 @@ public class Tree {
                 Tree childTree = new Tree();
                 String sha = childTree.addDirectory(treePath);//????????
                 if(!treeName.equals("")) { //how do i know theres a tree name??
-                    add("tree : " + sha + " : " + treeName);
+                    String entry = "tree : " + sha + " : " + treeName;
+                    //add(entry);
+                    treeContents.append(entry+"\n");
                 }
                 else {
-                    add("tree : " + sha);
+                    String entry = "tree : " + sha;
+                    //add(entry);
+                    treeContents.append(entry+"\n");
                 }
                 
                 addDirectory(treePath); // Calls same method again.
             } else {
                 String blobName = file.getName();
-                Blob blob = new Blob(blobName);
-                add("blob : " + blob.getSha1() + " : " + blobName);
+                String input = directoryPath + blobName;
+                Blob blob = new Blob(input);
+                String entry = "blob : " + blob.getSha1() + " : " + blobName;
+                //add(entry);
+                treeContents.append(entry+"\n");
+                //System.out.println("blob : " + blob.getSha1() + " : " + blobName);
             }
         }
 
+        String convertedStr = treeContents.toString();
+        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        add(addedContents);
 
         return getSha();
     }

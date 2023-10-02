@@ -41,11 +41,11 @@ public class TreeTest {
         if(!file1.exists()) {
             file1.createNewFile();
         }
-        /*File file2 = new File (dir1, "file2.txt");
+        File file2 = new File (dir1, "file2.txt");
         if(!file2.exists()) {
             file2.createNewFile();
         }
-        File file3 = new File (dir1, "file3.txt");
+        /*File file3 = new File (dir1, "file3.txt");
         if(!file3.exists()) {
             file3.createNewFile();
         }*/
@@ -166,15 +166,25 @@ public class TreeTest {
             file1.createNewFile();
         }*/
 
+        //test if file craeted in folder
+        String dirName = "./test1/";
+        File dir1 = new File (dirName);
+        File file1 = new File (dir1, "file1.txt");
+        assertTrue(file1.exists());
 
-
-
+        //actual test
         Tree tree = new Tree();
         String sha = tree.addDirectory("./test1/");
 
-        String expectedSha = "968d81f0c547460786e34543bc3f5b5b68ee5151";
+        String cont = tree.getTreeContents();
 
-        assertEquals(sha, expectedSha);
+        String expectedSha = "b8080d9ddb95805fa4f4d806ec3e5e25edc30131";
+
+        tree.removeBlob("file1.txt");
+        tree.removeBlob("file2.txt");
+        tree.removeBlob("file3.txt");
+
+        assertEquals(expectedSha, sha);
     }
 
     /*@Test
