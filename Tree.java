@@ -42,7 +42,7 @@ public class Tree {
         
     }
 
-    public void removeBlob(String fileToRemove){
+    public void removeBlob(String fileToRemove) throws FileNotFoundException{
         StringBuilder newContents = new StringBuilder();
         String[] lines = treeContents.toString().split("\\n");
         for(int i = 0; i < lines.length; i++){
@@ -52,9 +52,10 @@ public class Tree {
             }
         }
         treeContents = newContents;
+        writeToFile();
     }
 
-    public void removeTree(String hashToRemove){
+    public void removeTree(String hashToRemove) throws FileNotFoundException{
         StringBuilder newContents = new StringBuilder();
         String[] lines = treeContents.toString().split("\\n");
         for(int i = 0; i < lines.length; i++){
@@ -64,10 +65,11 @@ public class Tree {
             }
         }
         treeContents = newContents;
+        writeToFile();
     }
 
     public void writeToFile() throws FileNotFoundException{
-    String convertedStr = treeContents.toString();
+        String convertedStr = treeContents.toString();
         String addedContents = convertedStr.substring(0,convertedStr.length()-1);
         String sha = Blob.encryptPassword(addedContents);
         File tree = new File("./objects/" + sha);
@@ -77,11 +79,15 @@ public class Tree {
     }
 
     public String getSha() {
-        return Blob.encryptPassword(treeContents.toString());
+        String convertedStr = treeContents.toString();
+        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        return Blob.encryptPassword(addedContents);
     }
 
     public String getTreeContents(){
-        return treeContents.toString();
+        String convertedStr = treeContents.toString();
+        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        return addedContents;
     }
 
     public String addDirectory(String directoryPath) throws NoSuchAlgorithmException, IOException {
