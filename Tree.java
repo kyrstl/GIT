@@ -10,13 +10,13 @@ public class Tree {
         treeContents = new StringBuilder();
     }
 
-    public void add(String entry){
+    public void add(String entry) throws FileNotFoundException {
         //only add if no duplicates
-        String convertedStr = treeContents.toString();
-        if(convertedStr.contains(entry)) {
+        //String convertedStr = treeContents.toString();
+        //if(convertedStr.contains(entry)) {
 
-        }
-        else {
+        //}
+        //else {
             String[] entryComponents = entry.split(" : ");
             String hash = entryComponents[1];
             String fileName = "";
@@ -35,10 +35,10 @@ public class Tree {
                 }
             }
             if(!duplicate){
-                treeContents.append(entry);
+                treeContents.append(entry+"\n"); //ADDED NEW LINE
             }
-        }
-
+        //}
+        writeToFile();//???????????
         
     }
 
@@ -67,7 +67,9 @@ public class Tree {
     }
 
     public void writeToFile() throws FileNotFoundException{
-        String sha = Blob.encryptPassword(treeContents.toString());
+    String convertedStr = treeContents.toString();
+        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        String sha = Blob.encryptPassword(addedContents);
         File tree = new File("./objects/" + sha);
         PrintWriter pw = new PrintWriter(tree);
         pw.print(treeContents.toString());
@@ -101,13 +103,13 @@ public class Tree {
                 String sha = childTree.addDirectory(treePath);//????????
                 if(!treeName.equals("")) { //how do i know theres a tree name??
                     String entry = "tree : " + sha + " : " + treeName;
-                    //add(entry);
-                    treeContents.append(entry+"\n");
+                    add(entry);
+                    //treeContents.append(entry+"\n");
                 }
                 else {
                     String entry = "tree : " + sha;
-                    //add(entry);
-                    treeContents.append(entry+"\n");
+                    add(entry);
+                    //treeContents.append(entry+"\n");
                 }
                 
                 addDirectory(treePath); // Calls same method again.
@@ -116,15 +118,15 @@ public class Tree {
                 String input = directoryPath + blobName;
                 Blob blob = new Blob(input);
                 String entry = "blob : " + blob.getSha1() + " : " + blobName;
-                //add(entry);
-                treeContents.append(entry+"\n");
+                add(entry);
+                //treeContents.append(entry+"\n");
                 //System.out.println("blob : " + blob.getSha1() + " : " + blobName);
             }
         }
 
         String convertedStr = treeContents.toString();
         String addedContents = convertedStr.substring(0,convertedStr.length()-1);
-        add(addedContents);
+        //add(addedContents);
 
         return getSha();
     }
