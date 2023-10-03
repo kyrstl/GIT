@@ -80,7 +80,8 @@ public class Tree {
 
     public String getSha() {
         String convertedStr = treeContents.toString();
-        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        //String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        String addedContents = convertedStr.trim();
         return Blob.encryptPassword(addedContents);
     }
 
@@ -96,9 +97,11 @@ public class Tree {
         //showFiles(dir.listFiles());
 
         //SHOULD add inout directoryPath?
-        File[] files = dir.listFiles();
+        //File[] files = dir.listFiles();
+        String[] files = dir.list();
         //addDirectory(files);
-        for (File file : files) {
+        for (String fileName : files) {
+            File file = new File(directoryPath,fileName);
             if (file.isDirectory()) {
                 //System.out.println("Directory: " + file.getAbsolutePath());
                 String treePath = file.getAbsolutePath();
@@ -107,6 +110,7 @@ public class Tree {
                 //add(treeName);//is this right????
                 Tree childTree = new Tree();
                 String sha = childTree.addDirectory(treePath);//????????
+
                 if(!treeName.equals("")) { //how do i know theres a tree name??
                     String entry = "tree : " + sha + " : " + treeName;
                     add(entry);
@@ -122,7 +126,7 @@ public class Tree {
             } else {
                 String blobName = file.getName();
                 String input = directoryPath + blobName;
-                Blob blob = new Blob(input);
+                Blob blob = new Blob(input);//FILE NOT FOUND
                 String entry = "blob : " + blob.getSha1() + " : " + blobName;
                 add(entry);
                 //treeContents.append(entry+"\n");
@@ -130,11 +134,14 @@ public class Tree {
             }
         }
 
-        String convertedStr = treeContents.toString();
-        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        //String convertedStr = treeContents.toString();
+        //String addedContents = convertedStr.substring(0,convertedStr.length()-1);
         //add(addedContents);
 
-        return getSha();
+        String sha1 = getSha();
+        String hi = "hi!";
+
+        return sha1;
     }
 
     /*public void main(String... args) {

@@ -10,8 +10,8 @@ import java.util.Date;
 
 public class Commit {
     private String sTreeSha, sParentSha, sChildSha, sAuthor, sDate, sSummary, sCommitSha;
-    public Commit(String sParentSha, String sAuthor, String sSummary, Index index) throws IOException, NoSuchAlgorithmException {
-        this.sTreeSha = constructTreeSha(index);
+    public Commit(String sParentSha, String sAuthor, String sSummary) throws IOException, NoSuchAlgorithmException {
+        this.sTreeSha = constructTreeSha();
         this.sParentSha = sParentSha;
         this.sChildSha = "";
         this.sAuthor = sAuthor;
@@ -19,8 +19,8 @@ public class Commit {
         this.sSummary = sSummary;
     }
 
-    public Commit(String sAuthor, String sSummary, Index index) throws IOException, NoSuchAlgorithmException {
-        this("", sAuthor, sSummary, index);
+    public Commit(String sAuthor, String sSummary) throws IOException, NoSuchAlgorithmException {
+        this("", sAuthor, sSummary);
     }
 
     public void commit() throws Exception {
@@ -47,8 +47,10 @@ public class Commit {
         return sdf.format(date);  
     }
 
-    public String constructTreeSha(Index index) throws IOException, NoSuchAlgorithmException {
+    public String constructTreeSha() throws IOException, NoSuchAlgorithmException {
         Tree tree = new Tree();
+        Index index = new Index();//???
+        File indexFile = new File("index");
 
         BufferedReader br = new BufferedReader(new FileReader("index"));
         while(br.ready()) {
