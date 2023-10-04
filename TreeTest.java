@@ -33,7 +33,7 @@ public class TreeTest {
         pw.close();
 
         //addDirecotry tset
-        String dirName = "./test1/";
+        String dirName = "test1";
         File dir1 = new File (dirName);//create this directory (File class java)
         dir1.mkdir();
         
@@ -50,9 +50,9 @@ public class TreeTest {
             file3.createNewFile();
         }*/
 
-        String subName = "./subpath/";
+        String subName = "subpath";
         File subdir = new File (dir1,subName);
-        subdir.mkdir();
+        subdir.mkdirs();
 
         File file3 = new File (subdir, "file3.txt");
         if(!file3.exists()) {
@@ -177,7 +177,7 @@ public class TreeTest {
 
     @Test
     @DisplayName("Test if adding files and folders to directory works")
-    void testAddDirectory() throws IOException, NoSuchAlgorithmException {
+    void testAddDirectory() throws Exception {
         /*String dirName = "./test1/";
         File dir1 = new File (dirName);//create this directory (File class java)
         if(!dir1.exists()) {
@@ -190,31 +190,31 @@ public class TreeTest {
         }*/
 
         //test if file craeted in folder
-        String dirName = "./test1/";
+        String dirName = "test1";
         File dir1 = new File (dirName);
         File file1 = new File (dir1, "file1.txt");
         assertTrue(file1.exists());
 
-        File subdir = new File (dir1, "./subpath/");
+        File subdir = new File (dir1, "subpath");
         assertTrue(subdir.exists());
-        File file3 = new File ("./subpath/" + "file3.txt");
+        File file3 = new File (subdir,"file3.txt");
         assertTrue(file3.exists());
 
 
         //actual test
-        /*Tree tree = new Tree();
-        String sha = tree.addDirectory("./test1/");
+        Tree tree = new Tree();
+        String sha = tree.addDirectory("test1");
 
         String cont = tree.getTreeContents();
 
-        String expectedSha = "57903bbb2564fb6c469766c841f6826a47e315d1";
+        String expectedSha = "3b8ec64480ac9284136fe3dc24e4f4168f3c69c2";
 
         tree.removeBlob("file1.txt");
         tree.removeBlob("file2.txt");
         //tree.removeTree("da39a3ee5e6b4b0d3255bfef95601890afd80709");
         //tree.removeBlob("file3.txt");
 
-        assertEquals(expectedSha, sha);*/
+        assertEquals(expectedSha, sha);
     }
 
     /*@Test

@@ -70,7 +70,7 @@ public class Tree {
 
     public void writeToFile() throws FileNotFoundException{
         String convertedStr = treeContents.toString();
-        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        String addedContents = convertedStr.trim();
         String sha = Blob.encryptPassword(addedContents);
         File tree = new File("./objects/" + sha);
         PrintWriter pw = new PrintWriter(tree);
@@ -87,14 +87,18 @@ public class Tree {
 
     public String getTreeContents(){
         String convertedStr = treeContents.toString();
-        String addedContents = convertedStr.substring(0,convertedStr.length()-1);
+        String addedContents = convertedStr.trim();
         return addedContents;
     }
 
-    public String addDirectory(String directoryPath) throws NoSuchAlgorithmException, IOException {
+    public String addDirectory(String directoryPath) throws Exception {
         //ADD directoryPath??
         File dir = new File(directoryPath);
         //showFiles(dir.listFiles());
+        if (!dir.isDirectory())
+        {
+            throw new Exception ("Invalid directory path");
+        }
 
         //SHOULD add inout directoryPath?
         //File[] files = dir.listFiles();
@@ -104,12 +108,12 @@ public class Tree {
             File file = new File(directoryPath,fileName);
             if (file.isDirectory()) {
                 //System.out.println("Directory: " + file.getAbsolutePath());
-                String treePath = file.getAbsolutePath();
+                //String treePath = file.getAbsolutePath();
                 String treeName = file.getName();
                 //String treeName = file.getName();
                 //add(treeName);//is this right????
                 Tree childTree = new Tree();
-                String sha = childTree.addDirectory(treePath);//????????
+                String sha = childTree.addDirectory("./" + directoryPath + "/" + treeName);//????????
 
                 if(!treeName.equals("")) { //how do i know theres a tree name??
                     String entry = "tree : " + sha + " : " + treeName;
@@ -122,10 +126,10 @@ public class Tree {
                     //treeContents.append(entry+"\n");
                 }
                 
-                addDirectory(treePath); // Calls same method again.
+                addDirectory("./" + directoryPath + "/" + treeName); // Calls same method again.
             } else {
                 String blobName = file.getName();
-                String input = directoryPath + blobName;
+                String input = "./" + directoryPath + "/" + blobName;
                 Blob blob = new Blob(input);//FILE NOT FOUND
                 String entry = "blob : " + blob.getSha1() + " : " + blobName;
                 add(entry);
