@@ -52,6 +52,15 @@ public class Commit {
         Index index = new Index();//???
         //File indexFile = new File("index");
 
+        //adding prevTree sha
+        File commFile = new File(sParentSha);
+        BufferedReader br1 = new BufferedReader(new FileReader(commFile));
+        String prevTreeSha = br1.readLine();
+        br1.close();
+        String entry = "tree : " + prevTreeSha;
+        tree.add(entry);
+        
+
         BufferedReader br = new BufferedReader(new FileReader("index"));
         while(br.ready()) {
             String str = br.readLine();
@@ -72,5 +81,13 @@ public class Commit {
 
     public String getCommitSha() {
         return this.sCommitSha;
+    }
+
+    public String getTreeSha(String commitSha) throws IOException {
+        File commFile = new File(commitSha);
+        BufferedReader br = new BufferedReader(new FileReader(commFile));
+        String treeSha = br.readLine();
+        br.close();
+        return treeSha;
     }
 }
