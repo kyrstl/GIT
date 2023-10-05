@@ -53,12 +53,14 @@ public class Commit {
         //File indexFile = new File("index");
 
         //adding prevTree sha
-        File commFile = new File(sParentSha);
-        BufferedReader br1 = new BufferedReader(new FileReader(commFile));
-        String prevTreeSha = br1.readLine();
-        br1.close();
-        String entry = "tree : " + prevTreeSha;
-        tree.add(entry);
+        if(sParentSha != null) {
+            File commFile = new File(sParentSha);
+            BufferedReader br1 = new BufferedReader(new FileReader(commFile));
+            String prevTreeSha = br1.readLine();
+            br1.close();
+            String entry = "tree : " + prevTreeSha;
+            tree.add(entry);
+        }
         
 
         //adding file contents
@@ -73,11 +75,16 @@ public class Commit {
             else {
                 tree.add(str);//why cant i just do this? whats the point of addDirecotry?
             }
-            index.removeBlob(str);
+            String fileName = str.substring(50);
+            index.removeBlob(fileName);//fix file not found
         }
         br.close();
 
         return tree.getSha();
+    }
+
+    public String getCurrentTreeSha() {
+        return sTreeSha;
     }
 
     public String getCommitSha() {

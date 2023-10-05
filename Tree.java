@@ -74,7 +74,7 @@ public class Tree {
         String sha = Blob.encryptPassword(addedContents);
         File tree = new File("./objects/" + sha);
         PrintWriter pw = new PrintWriter(tree);
-        pw.print(treeContents.toString());
+        pw.print(addedContents);
         pw.close();
     }
 
@@ -143,7 +143,7 @@ public class Tree {
         //add(addedContents);
 
         String sha1 = getSha();
-        String hi = "hi!";
+        //String hi = "hi!";
 
         return sha1;
     }

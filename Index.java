@@ -43,8 +43,19 @@ public class Index {
         }
         if(!entryExists(newEntry, ind)) {
                 PrintWriter pw = new PrintWriter(new FileWriter(ind, true));
-                pw.append(newEntry + "\n");
+                pw.append(newEntry + "\n");//might have new line problem
                 pw.close();
+
+                String trimmedEntry = "";
+                BufferedReader br = new BufferedReader(new FileReader(ind));
+                while(br.ready()) {
+                    trimmedEntry += br.readLine();
+                }
+                br.close();
+
+                PrintWriter pw2 = new PrintWriter(new FileWriter(ind));
+                pw2.append(trimmedEntry);//might have new line problem
+                pw2.close();
                 return true;
         }
         
@@ -65,10 +76,21 @@ public class Index {
     }
 
     public boolean removeBlob(String origFileName) throws NoSuchAlgorithmException, IOException {
-        Blob bl = new Blob(origFileName);
-        String newFileName = bl.getSha1();
+        String shaFileName = "";
+        String newEntry = "";
+        File entry = new File(origFileName);
+        
+        if(entry.isDirectory()) {
+            Tree tree = new Tree();
+            shaFileName = tree.getSha();
+            newEntry = "tree : " + shaFileName + " : " + origFileName;
+        }
+        else {
+            Blob blob = new Blob(origFileName);
+            shaFileName = blob.getSha1();
 
-        String newEntry = origFileName + " : " + newFileName;
+            newEntry = "blob : " + shaFileName + " : " + origFileName;
+        }
         
         File inputFile = new File("index");
         File tempFile = new File("myTempFile.txt");

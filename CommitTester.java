@@ -32,31 +32,50 @@ public class CommitTester {
         //create index file
         Index ind = new Index();
         ind.init();
+        File index = new File("index");
+        index.createNewFile();
 
         File file1 = new File("file1.txt");
-        ind.addBlob("file1");
+        if(!file1.exists()) {
+            file1.createNewFile();
+        }
+        ind.addBlob("file1.txt");
 
+
+        //create  previous com
     }
 
     @AfterAll
-    static void tearDownAfterClass() {
+    static void tearDownAfterClass() throws IOException, NoSuchAlgorithmException {
         File objectDirectory = new File("objects");
         if (objectDirectory.exists())
             BlobTest.deleteDirectory(objectDirectory);
+
+        /*Index ind = new Index();
+        File file1 = new File("file1.txt");
+        if(file1.exists()) {
+            ind.removeBlob("file1.txt");
+        }
+        File file2 = new File("file2.txt");
+        if(file2.exists()) {
+            ind.removeBlob("file2.txt");
+        }*/
     }
 
     @Test
     void testCommit() throws Exception {
-        Commit commit = new Commit("f924e482dd33576fd0de90b6376f1671b08b5f52", "Jake Parker", "This is my commit.");
+        Commit commit = new Commit("", "Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
+        String date = commit.getDate();
         File file = new File("./objects/", sCommitSha);
         assertTrue(file.exists());
         assertEquals(
-            commit.constructTreeSha()                  + "\n" +
-            "f924e482dd33576fd0de90b6376f1671b08b5f52" + "\n" + "\n" +
+            "968d81f0c547460786e34543bc3f5b5b68ee5151" + "\n" +
+            ""                                         + "\n" + //parentSha
+            "\n"                                       +        //childSha
             "Jake Parker"                              + "\n" +
-            "29/09/2023"                               + "\n" +
+            date                                       + "\n" +
             "This is my commit."                       ,
             Files.readString(Paths.get("./objects/" + sCommitSha))
         );
@@ -67,16 +86,70 @@ public class CommitTester {
         Commit commit = new Commit("Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
+        String date = commit.getDate();
         File file = new File("./objects/", sCommitSha);
         assertTrue(file.exists());
         assertEquals(
-            commit.constructTreeSha() + "\n" +
-            ""                        + "\n" + "\n" + 
-            "Jake Parker"             + "\n" +
-            "29/09/2023"              + "\n" +
-            "This is my commit."      ,
+            "968d81f0c547460786e34543bc3f5b5b68ee5151" + "\n" +
+            ""                                         + "\n" + //parentSha
+            "\n"                                       +        //childSha
+            "Jake Parker"                              + "\n" +
+            date                                       + "\n" +
+            "This is my commit."                       ,
             Files.readString(Paths.get("./objects/" + sCommitSha))
         );
+    }
+
+    @Test
+    @DisplayName("test 1 commit")
+    void testCommit1() throws Exception {
+        Index ind = new Index();
+        ind.init();
+
+        File file2 = new File("file2.txt");
+        if(!file2.exists()) {
+            file2.createNewFile();
+        }
+        ind.addBlob("file2.txt");
+
+
+        Commit commit = new Commit("Jake Parker", "This is my commit.");
+        commit.commit();
+        String sCommitSha = commit.getCommitSha();
+
+        File file = new File("./objects/", sCommitSha);
+        assertTrue(file.exists());
+
+        String tSha = commit.getCurrentTreeSha();
+        String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
+        assertEquals(tSha,expectedSha);
+
+        //how do u check previous shas??
+        
+    }
+
+    @Test
+    @DisplayName("test 2 commits w/ 1 folder")
+    void testCommit2() throws Exception {
+        Commit commit = new Commit("Jake Parker", "This is my commit.");
+        commit.commit();
+        String sCommitSha = commit.getCommitSha();
+        String date = commit.getDate();
+        File file = new File("./objects/", sCommitSha);
+        assertTrue(file.exists());
+        
+    }
+
+    @Test
+    @DisplayName("test 4 commits w/ each 2 files + 2/4 have 1 folder")
+    void testCommit3() throws Exception {
+        Commit commit = new Commit("Jake Parker", "This is my commit.");
+        commit.commit();
+        String sCommitSha = commit.getCommitSha();
+        String date = commit.getDate();
+        File file = new File("./objects/", sCommitSha);
+        assertTrue(file.exists());
+        
     }
 
     @Test
@@ -88,8 +161,10 @@ public class CommitTester {
 
     @Test
     void testCreateTree() throws Exception {
-        Commit commit = new Commit("f924e482dd33576fd0de90b6376f1671b08b5f52","Jake Parker", "This is my commit.");
-        String sPredictedSha = "817fe5f54888cf558bbc980824085befce86bd98";
-        assertEquals(commit.constructTreeSha(), sPredictedSha);
+        //commit with no parent commit
+        Commit commit = new Commit("","Jake Parker", "This is my commit.");
+        String sPredictedSha = "968d81f0c547460786e34543bc3f5b5b68ee5151";
+        String treeSha = commit.getCurrentTreeSha();
+        assertEquals(treeSha, sPredictedSha);
     }
 }
