@@ -49,9 +49,10 @@ public class Index {
                 String trimmedEntry = "";
                 BufferedReader br = new BufferedReader(new FileReader(ind));
                 while(br.ready()) {
-                    trimmedEntry += br.readLine();
+                    trimmedEntry += br.readLine() + "\n";
                 }
                 br.close();
+                trimmedEntry = trimmedEntry.trim();
 
                 PrintWriter pw2 = new PrintWriter(new FileWriter(ind));
                 pw2.append(trimmedEntry);//might have new line problem

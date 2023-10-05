@@ -51,6 +51,11 @@ public class CommitTester {
         if (objectDirectory.exists())
             BlobTest.deleteDirectory(objectDirectory);
 
+        File index = new File("index");
+        if(index.exists()) {
+            index.delete();
+        }
+
         /*Index ind = new Index();
         File file1 = new File("file1.txt");
         if(file1.exists()) {
@@ -103,14 +108,14 @@ public class CommitTester {
     @Test
     @DisplayName("test 1 commit")
     void testCommit1() throws Exception {
-        Index ind = new Index();
+        /*Index ind = new Index();
         ind.init();
 
         File file2 = new File("file2.txt");
         if(!file2.exists()) {
             file2.createNewFile();
         }
-        ind.addBlob("file2.txt");
+        ind.addBlob("file2.txt");*/
 
 
         Commit commit = new Commit("Jake Parker", "This is my commit.");
@@ -122,7 +127,7 @@ public class CommitTester {
 
         String tSha = commit.getCurrentTreeSha();
         String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
-        assertEquals(tSha,expectedSha);
+        assertEquals(expectedSha, tSha);
 
         //how do u check previous shas??
         
@@ -165,6 +170,6 @@ public class CommitTester {
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
         String sPredictedSha = "968d81f0c547460786e34543bc3f5b5b68ee5151";
         String treeSha = commit.getCurrentTreeSha();
-        assertEquals(treeSha, sPredictedSha);
+        assertEquals(sPredictedSha, treeSha);
     }
 }
