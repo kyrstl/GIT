@@ -12,12 +12,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class CommitTester {
-    @BeforeAll
+    @BeforeEach
     static void setUpBeforeClass() throws IOException, NoSuchAlgorithmException {
         File exampleFile = new File("junit_example_file_data.txt");
         exampleFile.createNewFile();
@@ -45,7 +47,7 @@ public class CommitTester {
         //create  previous com
     }
 
-    @AfterAll
+    @AfterEach
     static void tearDownAfterClass() throws IOException, NoSuchAlgorithmException {
         File objectDirectory = new File("objects");
         if (objectDirectory.exists())
@@ -108,14 +110,14 @@ public class CommitTester {
     @Test
     @DisplayName("test 1 commit")
     void testCommit1() throws Exception {
-        /*Index ind = new Index();
+        Index ind = new Index();
         ind.init();
 
         File file2 = new File("file2.txt");
         if(!file2.exists()) {
             file2.createNewFile();
         }
-        ind.addBlob("file2.txt");*/
+        ind.addBlob("file2.txt");
 
 
         Commit commit = new Commit("Jake Parker", "This is my commit.");

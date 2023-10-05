@@ -106,7 +106,7 @@ public class IndexTest {
         Path indexPath = Path.of("index");
 
         PrintWriter pw = new PrintWriter(index);
-        pw.write("blob : cbaedccfded0c768295aae27c8e5b3a0025ef340: junit_example_file_data.txt");
+        pw.write("blob : cbaedccfded0c768295aae27c8e5b3a0025ef340 : junit_example_file_data.txt");
         pw.close();
 
         //run their code
