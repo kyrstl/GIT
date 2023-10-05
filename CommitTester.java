@@ -1,7 +1,9 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -20,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 public class CommitTester {
     @BeforeEach
-    static void setUpBeforeClass() throws IOException, NoSuchAlgorithmException {
+    void setUpBeforeClass() throws IOException, NoSuchAlgorithmException {
         File exampleFile = new File("junit_example_file_data.txt");
         exampleFile.createNewFile();
         PrintWriter pw = new PrintWriter(exampleFile);
@@ -34,8 +36,7 @@ public class CommitTester {
         //create index file
         Index ind = new Index();
         ind.init();
-        File index = new File("index");
-        index.createNewFile();
+        //File index = new File("index");
 
         File file1 = new File("file1.txt");
         if(!file1.exists()) {
@@ -48,7 +49,7 @@ public class CommitTester {
     }
 
     @AfterEach
-    static void tearDownAfterClass() throws IOException, NoSuchAlgorithmException {
+    void tearDownAfterClass() throws IOException, NoSuchAlgorithmException {
         File objectDirectory = new File("objects");
         if (objectDirectory.exists())
             BlobTest.deleteDirectory(objectDirectory);
@@ -120,7 +121,7 @@ public class CommitTester {
         ind.addBlob("file2.txt");
 
 
-        Commit commit = new Commit("Jake Parker", "This is my commit.");
+        Commit commit = new Commit("","Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
 
@@ -131,6 +132,22 @@ public class CommitTester {
         String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
         assertEquals(expectedSha, tSha);
 
+        String parentSha = "";
+        String nextSha = "";
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        for(int i=1; i<=6; i++) {
+            String str1 = br.readLine();
+            if(i==2) {
+                parentSha = str1;
+            }
+            else if(i==3) {
+                nextSha = str1;
+            }
+        }
+        br.close();
+        assertEquals(parentSha, "");
+        assertEquals(nextSha, "");//because only one commit
+
         //how do u check previous shas??
         
     }
@@ -138,12 +155,83 @@ public class CommitTester {
     @Test
     @DisplayName("test 2 commits w/ 1 folder")
     void testCommit2() throws Exception {
-        Commit commit = new Commit("Jake Parker", "This is my commit.");
+        Index ind = new Index();
+        ind.init();
+
+        //first commit
+        File file2 = new File("file2.txt");
+        if(!file2.exists()) {
+            file2.createNewFile();
+        }
+        ind.addBlob("file2.txt");
+
+        Commit commit = new Commit("","Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
-        String date = commit.getDate();
-        File file = new File("./objects/", sCommitSha);
-        assertTrue(file.exists());
+
+        File first = new File("./objects/", sCommitSha);
+        assertTrue(first.exists());
+
+        String tSha = commit.getCurrentTreeSha();
+        String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
+        assertEquals(expectedSha, tSha);
+
+
+        //adding second commit
+
+        File file3 = new File("file3.txt");
+        if(!file3.exists()) {
+            file3.createNewFile();
+        }
+        ind.addBlob("file3.txt");
+
+        File file4 = new File("file4.txt");
+        if(!file4.exists()) {
+            file4.createNewFile();
+        }
+        ind.addBlob("file4.txt");
+        
+        File subfolder = new File("subpath");
+        subfolder.mkdirs();
+        
+        //ind.addBlob("subpath");
+
+        assertTrue(subfolder.isDirectory());
+
+        
+        Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
+        commit2.commit();
+        String sCommit2Sha = commit2.getCommitSha();
+
+        File second = new File("./objects/", sCommit2Sha);
+        assertTrue(second.exists());
+
+        String tSha2 = commit2.getCurrentTreeSha();
+        String expectedSha2 = "6c7e58a2700e3a97b8e295133521e7eb9077408e";//wrong this is if blob
+        assertEquals(expectedSha2, tSha2);
+
+
+        /*String tSha = commit.getCurrentTreeSha();
+        String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
+        assertEquals(expectedSha, tSha);
+
+        String parentSha = "";
+        String nextSha = "";
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        for(int i=1; i<=6; i++) {
+            String str1 = br.readLine();
+            if(i==2) {
+                parentSha = str1;
+            }
+            else if(i==3) {
+                nextSha = str1;
+            }
+        }
+        br.close();
+        assertEquals(parentSha, "");
+        assertEquals(nextSha, "");//because only one commit
+
+        //how do u check previous shas??*/
         
     }
 

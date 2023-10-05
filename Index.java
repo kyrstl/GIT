@@ -43,7 +43,7 @@ public class Index {
         }
         if(!entryExists(newEntry, ind)) {
                 PrintWriter pw = new PrintWriter(new FileWriter(ind, true));
-                pw.append(newEntry + "\n");//might have new line problem
+                pw.append("\n" + newEntry);//might have new line problem
                 pw.close();
 
                 String trimmedEntry = "";
