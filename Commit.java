@@ -61,6 +61,7 @@ public class Commit {
         tree.add(entry);
         
 
+        //adding file contents
         BufferedReader br = new BufferedReader(new FileReader("index"));
         while(br.ready()) {
             String str = br.readLine();

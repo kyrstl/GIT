@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public class CommitTester {
     @BeforeAll
-    static void setUpBeforeClass() throws IOException {
+    static void setUpBeforeClass() throws IOException, NoSuchAlgorithmException {
         File exampleFile = new File("junit_example_file_data.txt");
         exampleFile.createNewFile();
         PrintWriter pw = new PrintWriter(exampleFile);
@@ -27,6 +28,14 @@ public class CommitTester {
         File objectDirectory = new File("objects");
         if (!objectDirectory.exists())
             objectDirectory.mkdir();
+
+        //create index file
+        Index ind = new Index();
+        ind.init();
+
+        File file1 = new File("file1.txt");
+        ind.addBlob("file1");
+
     }
 
     @AfterAll
@@ -79,8 +88,8 @@ public class CommitTester {
 
     @Test
     void testCreateTree() throws Exception {
-        Commit commit = new Commit("Jake Parker", "This is my commit.");
-        String sPredictedSha = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+        Commit commit = new Commit("f924e482dd33576fd0de90b6376f1671b08b5f52","Jake Parker", "This is my commit.");
+        String sPredictedSha = "817fe5f54888cf558bbc980824085befce86bd98";
         assertEquals(commit.constructTreeSha(), sPredictedSha);
     }
 }

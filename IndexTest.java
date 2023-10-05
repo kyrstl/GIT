@@ -89,7 +89,7 @@ public class IndexTest {
         ind.addBlob("junit_example_file_data.txt");
 
         //check if index was updated
-        String correctIndexEntry = "junit_example_file_data.txt : cbaedccfded0c768295aae27c8e5b3a0025ef340";
+        String correctIndexEntry = "blob : cbaedccfded0c768295aae27c8e5b3a0025ef340 : junit_example_file_data.txt";
         String indexContents = Files.readString(indexPath);
         assertTrue(correctIndexEntry.equals(indexContents) || (correctIndexEntry + "\n").equals(indexContents));
 
