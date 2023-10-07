@@ -3,6 +3,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -68,6 +69,39 @@ public class CommitTester {
         if(file2.exists()) {
             ind.removeBlob("file2.txt");
         }*/
+
+        File file4 = new File("file4.txt");
+        if(file4.exists()) {
+            file4.delete();
+        }
+
+        File file3 = new File("file3.txt");
+        if(file3.exists()) {
+            file3.delete();
+        }
+        File file2 = new File("file2.txt");
+        if(file2.exists()) {
+            file2.delete();
+        }
+        File file1 = new File("file1.txt");
+        if(file1.exists()) {
+            file1.delete();
+        }
+        
+        File subfolder = new File("subpath");
+        if(subfolder.exists()) {
+            subfolder.delete();
+        }
+
+        File file5 = new File("file5.txt");
+        if(file5.exists()) {
+            file5.delete();
+        }
+
+        File file6 = new File("file6.txt");
+        if(file6.exists()) {
+            file6.delete();
+        }
     }
 
     @Test
@@ -194,7 +228,7 @@ public class CommitTester {
         File subfolder = new File("subpath");
         subfolder.mkdirs();
         
-        //ind.addBlob("subpath");
+        ind.addBlob("subpath");
 
         assertTrue(subfolder.isDirectory());
 
@@ -202,6 +236,10 @@ public class CommitTester {
         Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
         commit2.commit();
         String sCommit2Sha = commit2.getCommitSha();
+        commit.setNextSha(sCommit2Sha);
+
+        //commit2.setParentSha(sCommitSha);
+        String parentSha = commit2.getParentSha();
 
         File second = new File("./objects/", sCommit2Sha);
         assertTrue(second.exists());
@@ -209,6 +247,10 @@ public class CommitTester {
         String tSha2 = commit2.getCurrentTreeSha();
         String expectedSha2 = "6c7e58a2700e3a97b8e295133521e7eb9077408e";//wrong this is if blob
         assertEquals(expectedSha2, tSha2);
+
+
+        assertTrue(commit.getNextSha().equals(sCommit2Sha));
+        assertTrue(commit2.getParentSha().equals(sCommitSha));
 
 
         /*String tSha = commit.getCurrentTreeSha();
@@ -238,13 +280,209 @@ public class CommitTester {
     @Test
     @DisplayName("test 4 commits w/ each 2 files + 2/4 have 1 folder")
     void testCommit3() throws Exception {
-        Commit commit = new Commit("Jake Parker", "This is my commit.");
+        Index ind = new Index();
+        ind.init();
+
+        File file2 = new File("file2.txt");
+        if(!file2.exists()) {
+            file2.createNewFile();
+        }
+        writeContents(file2,"2");
+        ind.addBlob("file2.txt");
+
+        Commit commit = new Commit("","Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
-        String date = commit.getDate();
-        File file = new File("./objects/", sCommitSha);
-        assertTrue(file.exists());
+
+        File first = new File("./objects/", sCommitSha);
+        assertTrue(first.exists());
+
+        String tSha = commit.getCurrentTreeSha();
+        String expectedSha = "dcfbe813de81fc88916bf2fa135fa81cc912ffbe";
+        assertEquals(expectedSha, tSha);
+
+
+        //second commit
+        File file3 = new File("file3.txt");
+        if(!file3.exists()) {
+            file3.createNewFile();
+        }
+        writeContents(file3,"3");
+        ind.addBlob("file3.txt");
+
+        File file4 = new File("file4.txt");
+        if(!file4.exists()) {
+            file4.createNewFile();
+        }
+        writeContents(file4,"4");
+        ind.addBlob("file4.txt");
         
+        File subfolder = new File("subpath");
+        subfolder.mkdirs();
+        ind.addBlob("subpath");
+
+        assertTrue(subfolder.isDirectory());
+
+        
+        Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
+        commit2.commit();
+        String sCommit2Sha = commit2.getCommitSha();
+        String parentSha = commit2.getParentSha();
+        commit.setNextSha(sCommit2Sha);
+
+        File second = new File("./objects/", sCommit2Sha);
+        assertTrue(second.exists());
+
+        String tSha2 = commit2.getCurrentTreeSha();
+        String expectedSha2 = "d071722ee024c422d1165bd72f6bd9df50f3eba8";//wrong this is if blob
+        assertEquals(expectedSha2, tSha2);
+
+        assertTrue(commit.getNextSha().equals(sCommit2Sha));
+        assertTrue(commit2.getParentSha().equals(sCommitSha));
+        
+        //third commit
+        File file5 = new File("file5.txt");
+        if(!file5.exists()) {
+            file5.createNewFile();
+        }
+        writeContents(file5,"5");
+        ind.addBlob("file5.txt");
+
+        File file6 = new File("file6.txt");
+        if(!file6.exists()) {
+            file6.createNewFile();
+        }
+        writeContents(file6,"6");
+        ind.addBlob("file6.txt");
+
+        Commit commit3 = new Commit(sCommit2Sha,"Jingjing Duan", "This is a third commit.");
+        commit3.commit();
+        String sCommit3Sha = commit3.getCommitSha();
+        String parentSha3 = commit3.getParentSha();
+        commit2.setNextSha(sCommit3Sha);
+
+        File third = new File("./objects/", sCommit3Sha);
+        assertTrue(third.exists());
+
+        String tSha3 = commit3.getCurrentTreeSha();
+        String expectedSha3 = "8800643c6fc16632633a2967831740e683e55553";//wrong this is if blob
+        assertEquals(expectedSha3, tSha3);
+
+        assertTrue(commit2.getNextSha().equals(sCommit3Sha));
+        assertTrue(commit3.getParentSha().equals(sCommit2Sha));
+        assertTrue(commit3.getParentSha().equals("23f7ef6fca69383b92f6bec4d5fec06bcc79de5b"));
+
+
+        //fourth commit
+        File file7 = new File("file7.txt");
+        if(!file7.exists()) {
+            file7.createNewFile();
+        }
+        writeContents(file7,"7");
+        ind.addBlob("file7.txt");
+
+        File file8 = new File("file8.txt");
+        if(!file8.exists()) {
+            file8.createNewFile();
+        }
+        writeContents(file8,"8");
+        ind.addBlob("file8.txt");
+        
+        File subfolder2 = new File("subpath2");
+        subfolder2.mkdirs();
+        ind.addBlob("subpath2");
+
+        assertTrue(subfolder2.isDirectory());
+
+        Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a third commit.");
+        commit4.commit();
+        String sCommit4Sha = commit4.getCommitSha();
+        String parentSha4 = commit4.getParentSha();
+        commit3.setNextSha(sCommit4Sha);
+
+        File fourth = new File("./objects/", sCommit4Sha);
+        assertTrue(fourth.exists());
+
+        String tSha4 = commit4.getCurrentTreeSha();
+        String expectedSha4 = "6d0790f43373ce52717d130959dd14e6f1d7cde0";//wrong this is if blob
+        assertEquals(expectedSha4, tSha4);
+
+        assertTrue(commit3.getNextSha().equals(sCommit4Sha));
+        assertTrue(commit4.getParentSha().equals(sCommit3Sha));
+
+    }
+
+    @Test
+    @DisplayName("test 2 commits w/ 1 folder")
+    void testCommit4() throws Exception {
+        Index ind = new Index();
+        ind.init();
+
+        //first commit
+        File file2 = new File("file2.txt");
+        if(!file2.exists()) {
+            file2.createNewFile();
+        }
+        ind.addBlob("file2.txt");
+
+        Commit commit = new Commit("","Jake Parker", "This is my commit.");
+        commit.commit();
+        String sCommitSha = commit.getCommitSha();
+
+        File first = new File("./objects/", sCommitSha);
+        assertTrue(first.exists());
+
+        String tSha = commit.getCurrentTreeSha();
+        String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
+        assertEquals(expectedSha, tSha);
+
+
+        //adding second commit
+
+        File file3 = new File("file3.txt");
+        if(!file3.exists()) {
+            file3.createNewFile();
+        }
+        ind.addBlob("file3.txt");
+
+        File subfolder = new File("subpath");
+        subfolder.mkdirs();
+        assertTrue(subfolder.isDirectory());
+
+        File file4 = new File(subfolder,"file4.txt");
+        if(!file4.exists()) {
+            file4.createNewFile();
+        }
+        ind.addBlob("subpath");
+        ind.addBlob("./subpath/" + "file4.txt");//should we be able to add files that arent in the main folder to index?
+        //WOULD WE HAVE TO CREATE A TREE IN INDEX???
+
+        
+        Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
+        commit2.commit();
+        String sCommit2Sha = commit2.getCommitSha();
+        commit.setNextSha(sCommit2Sha);
+
+        //commit2.setParentSha(sCommitSha);
+        String parentSha = commit2.getParentSha();
+
+        File second = new File("./objects/", sCommit2Sha);
+        assertTrue(second.exists());
+
+        String tSha2 = commit2.getCurrentTreeSha();
+        String expectedSha2 = "0362d18d8a216c7b85a5a8c965885fd835a7addd";//wrong this is if blob
+        assertEquals(expectedSha2, tSha2);
+
+
+        assertTrue(commit.getNextSha().equals(sCommit2Sha));
+        assertTrue(commit2.getParentSha().equals(sCommitSha));
+        
+    }
+
+    public void writeContents(File file, String contents) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(file);
+        pw.print(contents);
+        pw.close();
     }
 
     @Test

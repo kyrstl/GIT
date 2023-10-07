@@ -11,8 +11,8 @@ import java.util.Date;
 public class Commit {
     private String sTreeSha, sParentSha, sChildSha, sAuthor, sDate, sSummary, sCommitSha;
     public Commit(String sParentSha, String sAuthor, String sSummary) throws Exception {
-        this.sTreeSha = constructTreeSha();
         this.sParentSha = sParentSha;
+        this.sTreeSha = constructTreeSha();
         this.sChildSha = "";
         this.sAuthor = sAuthor;
         this.sDate = getDate();
@@ -41,6 +41,22 @@ public class Commit {
         f_writer.close();
     }
 
+    public void setParentSha(String parentSha) {
+        this.sParentSha = parentSha;
+    }
+    
+    public String getParentSha() {
+        return sParentSha;
+    }
+
+    public void setNextSha(String nextSha) {
+        this.sChildSha = nextSha;
+    }
+    
+    public String getNextSha() {
+        return sChildSha;
+    }
+
     public static String getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");  
         Date date = new Date();  
@@ -53,8 +69,8 @@ public class Commit {
         //File indexFile = new File("index");
 
         //adding prevTree sha
-        if(sParentSha != null) {
-            File commFile = new File(sParentSha);
+        if(sParentSha != null && !sParentSha.equals("")) {
+            File commFile = new File("./objects/" + sParentSha);
             BufferedReader br1 = new BufferedReader(new FileReader(commFile));
             String prevTreeSha = br1.readLine();
             br1.close();
@@ -69,8 +85,8 @@ public class Commit {
             String str = br.readLine();
             String type = str.substring(0,4);
             if(type.equals("tree")) {
-                String entryName = str.substring(47);
-                tree.addDirectory(entryName);//wouldn't this add all things in that directory? but those same files would be in Index too? that would be duplicated? OH, TREE CANT DO DUPLICATE ok got it
+                //String entryName = str.substring(50);
+                tree.add(str);//wouldn't this add all things in that directory? but those same files would be in Index too? that would be duplicated? OH, TREE CANT DO DUPLICATE ok got it
             }
             else {
                 tree.add(str);//why cant i just do this? whats the point of addDirecotry?
