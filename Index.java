@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -118,6 +119,37 @@ public class Index {
         reader.close(); 
         boolean successful = tempFile.renameTo(inputFile);
         return successful;
+    }
+
+    public void deleteFile(String fileName) throws IOException {
+        PrintWriter pw = new PrintWriter("index");
+        if(isEmpty()) {
+            pw.print("\n");
+        }
+        pw.print("*deleted* " + fileName);
+        pw.close();//what??
+    }
+
+    public void editFile(String fileName) throws IOException {
+        PrintWriter pw = new PrintWriter("index");
+        if(isEmpty()) {
+            pw.print("\n");
+        }
+        pw.print("*edited* " + fileName);
+        pw.close();//what??
+    }
+
+    public boolean isEmpty() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader("index"));
+        String contents = "";
+        while (br.ready()) {
+            contents+=br.readLine();
+        }
+        br.close();
+        if(contents.length()>0) {
+            return false;
+        }
+        return true;
     }
 
 }
