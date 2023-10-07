@@ -79,7 +79,7 @@ public class IndexTest {
 
     @Test
     @DisplayName("Tests if blob is added to index correctly")
-    void testAddBlob() throws IOException, NoSuchAlgorithmException {
+    void testAddBlob() throws Exception {
         File exampleFile = new File("junit_example_file_data.txt");
         Path indexPath = Path.of("index");
         Index ind = new Index();

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 public class CommitTester {
     @BeforeEach
-    void setUpBeforeClass() throws IOException, NoSuchAlgorithmException {
+    void setUpBeforeClass() throws Exception {
         File exampleFile = new File("junit_example_file_data.txt");
         exampleFile.createNewFile();
         PrintWriter pw = new PrintWriter(exampleFile);
@@ -90,7 +90,7 @@ public class CommitTester {
         
         File subfolder = new File("subpath");
         if(subfolder.exists()) {
-            subfolder.delete();
+            BlobTest.deleteDirectory(subfolder);
         }
 
         File file5 = new File("file5.txt");
@@ -101,6 +101,21 @@ public class CommitTester {
         File file6 = new File("file6.txt");
         if(file6.exists()) {
             file6.delete();
+        }
+
+        File subfolder2 = new File("subpath2");
+        if(subfolder2.exists()) {
+            BlobTest.deleteDirectory(subfolder2);
+        }
+
+        File file7 = new File("file7.txt");
+        if(file7.exists()) {
+            file7.delete();
+        }
+
+        File file8 = new File("file8.txt");
+        if(file8.exists()) {
+            file8.delete();
         }
     }
 
@@ -470,7 +485,7 @@ public class CommitTester {
         assertTrue(second.exists());
 
         String tSha2 = commit2.getCurrentTreeSha();
-        String expectedSha2 = "0362d18d8a216c7b85a5a8c965885fd835a7addd";//wrong this is if blob
+        String expectedSha2 = "dd67edc2d5822156513404d20ea574333d6b0571";//wrong this is if blob
         assertEquals(expectedSha2, tSha2);
 
 

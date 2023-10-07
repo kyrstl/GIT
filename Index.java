@@ -25,14 +25,15 @@ public class Index {
         dir.mkdir();
     }
     
-    public boolean addBlob(String origFileName) throws NoSuchAlgorithmException, IOException {
+    public boolean addBlob(String origFileName) throws Exception {
         File entry = new File(origFileName);
 
         String newEntry = "";
         String shaFileName = "";
         if(entry.isDirectory()) {
             Tree tree = new Tree();
-            shaFileName = tree.getSha();
+            //shaFileName = tree.getSha();
+            shaFileName = tree.addDirectory(origFileName);
             newEntry = "tree : " + shaFileName + " : " + origFileName;
         }
         else {
