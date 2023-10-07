@@ -136,6 +136,8 @@ public class CommitTester {
             "This is my commit."                       ,
             Files.readString(Paths.get("./objects/" + sCommitSha))
         );
+
+        //assertEquals(date,"10/06/23");
     }
 
     @Test
@@ -173,6 +175,7 @@ public class CommitTester {
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
         commit.commit();
         String sCommitSha = commit.getCommitSha();
+        assertEquals(sCommitSha, "a4b75043ca4d3d4668b7ea15bdc013fbbee051c8");
 
         File file = new File("./objects/", sCommitSha);
         assertTrue(file.exists());
