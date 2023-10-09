@@ -1,7 +1,10 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.security.NoSuchAlgorithmException;
 
 public class Tree {
@@ -146,6 +149,56 @@ public class Tree {
         //String hi = "hi!";
 
         return sha1;
+    }
+
+    public String findDeletedFileTree(String treeSha, String fileName) throws Exception {
+        String sha = recurse(treeSha, fileName);
+        return sha;
+    }
+
+    public String findEditedFileTree(String treeSha, String fileName) throws Exception {
+        String sha = recurse(treeSha, fileName);
+        return sha;
+    }
+
+    private String recurse(String treeSha, String fileName) throws Exception {
+        //File treeFile = new File(treeSha);//might need path name = objects
+        String contents = getFileContents(treeSha);
+        String firstLine = getFirstLine(treeSha);
+
+        if(contents.contains(fileName) && !firstLine.equals("")) {
+            return(firstLine.substring(7));
+        }
+        else if (contents.contains(fileName)) {
+            return "";
+        }
+        else if (firstLine.equals("")) {
+            throw new Exception("File not found");
+        }
+        else {
+            return recurse(firstLine,fileName);
+        }
+
+    }
+
+    private String getFileContents(String fileName) throws IOException {
+        File file = new File(fileName);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String contents = "";
+        while(br.ready()) {
+            contents += br.readLine() + "\n";
+        }
+        br.close();
+        contents = contents.trim();
+        return contents;
+    }
+
+    private String getFirstLine(String fileName) throws IOException {
+        File file = new File(fileName);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String firstLine = br.readLine();
+        br.close();
+        return firstLine;
     }
 
     /*public void main(String... args) {
