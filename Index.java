@@ -95,10 +95,14 @@ public class Index {
             newEntry = "blob : " + shaFileName + " : " + origFileName;
         }
         
+        return removeLine(newEntry);
+    }
+
+    public boolean removeLine(String input) throws IOException {
         File inputFile = new File("index");
         File tempFile = new File("myTempFile.txt");
         
-        if(!entryExists(newEntry, ind)) {
+        if(!entryExists(input, ind)) {
             return false;
         }
 
@@ -106,7 +110,7 @@ public class Index {
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         
-        String lineToRemove = newEntry;
+        String lineToRemove = input;
         String currentLine;
         
         while((currentLine = reader.readLine()) != null) {

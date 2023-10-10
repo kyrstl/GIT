@@ -89,6 +89,7 @@ public class Commit {
             String fileName = "";
             if(line.contains("*deleted*") || line.contains("*edited*")) {
                 fileName = line.substring(10);
+                //PROBABLY NEED TO RENAME THE PREVIOUS COMMIT???
                 //WOULD I NEED TO DO AN ERROR IF THERES NO PARENT SHA??????
                 String treeSha = tree.findDeletedFileTree(sParentSha,fileName);//if it even has a parentsha
                 tree.add("tree : " + treeSha);
@@ -99,6 +100,9 @@ public class Commit {
                     String editedSha = editedFile.getSha1();
                     tree.add("blob : " + editedSha + " : " + fileName);
                 }
+
+                //need to remove the file afterwwards
+                index.removeLine(line);
             }
         }
         br0.close();

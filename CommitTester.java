@@ -624,7 +624,7 @@ public class CommitTester {
 
         assertTrue(subfolder2.isDirectory());
 
-        Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a third commit.");
+        Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a 4th commit.");
         commit4.commit();
         String sCommit4Sha = commit4.getCommitSha();
         String parentSha4 = commit4.getParentSha();
@@ -640,6 +640,14 @@ public class CommitTester {
         assertTrue(commit3.getNextSha().equals(sCommit4Sha));
         assertTrue(commit4.getParentSha().equals(sCommit3Sha));
 
+        //5th commit has a deleted file
+        ind.deleteFile("file7.txt");
+        Commit commit5 = new Commit(sCommit4Sha,"Jingjing Duan", "This is a 5th commit.");
+        commit5.commit();
+        String commit5ShaName = commit5.getCommitSha();
+
+        String contents = commit5.getFileContents(commit5ShaName);
+        
     }
 
     public void writeContents(File file, String contents) throws FileNotFoundException {
