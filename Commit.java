@@ -91,9 +91,10 @@ public class Commit {
                 fileName = line.substring(10);
                 //PROBABLY NEED TO RENAME THE PREVIOUS COMMIT???
                 //WOULD I NEED TO DO AN ERROR IF THERES NO PARENT SHA??????
-                String treeSha = tree.findDeletedFileTree(sParentSha,fileName);//if it even has a parentsha
+                String prevTreeSha = getTreeSha(sParentSha);
+                String treeSha = tree.findDeletedFileTree(prevTreeSha,fileName);//if it even has a parentsha
                 tree.add("tree : " + treeSha);
-                addAllFilesToTree(tree, treeSha, sParentSha, fileName);
+                addAllFilesToTree(tree, treeSha, prevTreeSha, fileName);
 
                 if(line.contains("*edited*")) {
                     Blob editedFile = new Blob(fileName);
@@ -132,7 +133,7 @@ public class Commit {
         //fileName = the name of file deleted/edited
         //File treeFile = new File(currentTSha);
         //String contents = getFileContents(currentTSha);
-        String prevTreeSha = getFirstLine(currentTSha);//get first line of the file thing (but this might not exist!!)
+        String prevTreeSha = getFirstLine(currentTSha).substring(7);//get first line of the file thing (but this might not exist!!)
 
         if(currentTSha.equals(stopSha)) { }
         else {
@@ -149,8 +150,12 @@ public class Commit {
     }
 
     private void addFileContentsToTree(String fromFileName, Tree tree) throws IOException, NoSuchAlgorithmException {
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File file = new File(dir,fromFileName);
+
         //Index index = new Index();
-        BufferedReader br = new BufferedReader(new FileReader(fromFileName));
+        BufferedReader br = new BufferedReader(new FileReader(file));
         String firstLine = getFirstLine(fromFileName);
         if(firstLine.length() == 47) {
             br.readLine();
@@ -164,7 +169,7 @@ public class Commit {
             }
             else if (type.equals("blob")) {
                 tree.add(str);//why cant i just do this? whats the point of addDirecotry?
-            }
+            }//this literally still adds it into it.......KFJLDSHFAKDSJCHSDKCFJHSDFKJSDHFLKDSJFHLKSDJFH
         }
         br.close();
     }
@@ -191,11 +196,11 @@ public class Commit {
     }
 
     public String getTreeSha(String commitSha) throws Exception {
-        File commFile = new File(commitSha);
+        File commFile = new File("./objects/" + commitSha);
         BufferedReader br = new BufferedReader(new FileReader(commFile));
         String treeSha = br.readLine();
         br.close();
-        if(treeSha.length()==47) {
+        if(treeSha.length()==40) {
             return treeSha;
         }
         else {
@@ -204,7 +209,10 @@ public class Commit {
     }
 
     public String getFileContents(String fileName) throws IOException {
-        File file = new File(fileName);
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File file = new File(dir,fileName);
+
         BufferedReader br = new BufferedReader(new FileReader(file));
         String contents = "";
         while(br.ready()) {
@@ -216,7 +224,10 @@ public class Commit {
     }
 
     private String getFirstLine(String fileName) throws IOException {
-        File file = new File(fileName);
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File file = new File(dir,fileName);
+
         BufferedReader br = new BufferedReader(new FileReader(file));
         String firstLine = br.readLine();
         br.close();

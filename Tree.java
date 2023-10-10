@@ -177,7 +177,10 @@ public class Tree {
     }
 
     private String getFileContents(String fileName) throws IOException {
-        File file = new File(fileName);
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File file = new File(dir,fileName);
+
         BufferedReader br = new BufferedReader(new FileReader(file));
         String contents = "";
         while(br.ready()) {
@@ -189,7 +192,10 @@ public class Tree {
     }
 
     private String getFirstLine(String fileName) throws IOException {
-        File file = new File(fileName);
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File file = new File(dir,fileName);
+
         BufferedReader br = new BufferedReader(new FileReader(file));
         String firstLine = br.readLine();
         br.close();

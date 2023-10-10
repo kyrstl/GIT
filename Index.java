@@ -127,7 +127,7 @@ public class Index {
 
     public void deleteFile(String fileName) throws IOException {
         PrintWriter pw = new PrintWriter("index");
-        if(isEmpty()) {
+        if(!isEmpty()) {
             pw.print("\n");
         }
         pw.print("*deleted* " + fileName);
@@ -150,10 +150,10 @@ public class Index {
             contents+=br.readLine();
         }
         br.close();
-        if(contents.length()>0) {
-            return false;
+        if(contents == null || contents.equals("")) {
+            return true;
         }
-        return true;
+        return false;
     }
 
 }
