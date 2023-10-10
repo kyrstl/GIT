@@ -50,6 +50,11 @@ public class IndexTest {
         if(objectDirectory.exists()){
             deleteDirectory(objectDirectory);
         }
+
+        File file1 = new File("file1.txt");
+        if(file1.exists()) {
+            file1.delete();
+        }
     }
 
     @Test
@@ -139,5 +144,34 @@ public class IndexTest {
             // delete files and empty subfolders
             subfile.delete();
         }
+    }
+
+    @Test
+    @DisplayName("Tests if edited and eldeted files add to index correctly")
+    void testDeleteEDitFile() throws Exception {
+        File file1 = new File("file1.txt");
+        if(!file1.exists()) {
+            file1.createNewFile();
+        }
+        Path indexPath = Path.of("index");
+        Index ind = new Index();
+        ind.init();
+
+        //run code
+        ind.addBlob("file1.txt");
+
+        //check if index was updated
+        String correctIndexEntry = "blob : da39a3ee5e6b4b0d3255bfef95601890afd80709 : file1.txt";
+        String indexContents = Files.readString(indexPath);
+        assertTrue(correctIndexEntry.equals(indexContents) || (correctIndexEntry + "\n").equals(indexContents));
+
+        //attempt to add the same item again
+        ind.deleteFile("file2.txt");
+        String newIndexContents = Files.readString(indexPath);
+        assertTrue(newIndexContents.contains("*deleted* file2.txt"));
+
+        ind.editFile("file3.txt");
+        String newIndexContents2 = Files.readString(indexPath);
+        assertTrue(newIndexContents2.contains("*edited* file3.txt"));
     }
 }

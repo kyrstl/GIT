@@ -156,11 +156,6 @@ public class Tree {
         return sha;
     }
 
-    public String findEditedFileTree(String treeSha, String fileName) throws Exception {
-        String sha = recurse(treeSha, fileName);
-        return sha;
-    }
-
     private String recurse(String treeSha, String fileName) throws Exception {
         //File treeFile = new File(treeSha);//might need path name = objects
         String contents = getFileContents(treeSha);
