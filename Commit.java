@@ -6,7 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;  
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;  
 
 public class Commit {
@@ -18,6 +19,8 @@ public class Commit {
         this.sAuthor = sAuthor;
         this.sDate = getDate();
         this.sSummary = sSummary;
+
+        commit();
     }
 
     public Commit(String sAuthor, String sSummary) throws Exception {
@@ -83,6 +86,7 @@ public class Commit {
         }
 
         //check deleted files? but how would u know?? unless u looped through index already?? but u do that below??????????
+        /*ArrayList<String> indexFiles = new ArrayList<String>();
         BufferedReader br0 = new BufferedReader(new FileReader("index"));
         while(br0.ready()) {
             String line = br0.readLine();
@@ -93,20 +97,65 @@ public class Commit {
                 //WOULD I NEED TO DO AN ERROR IF THERES NO PARENT SHA??????
                 String prevTreeSha = getTreeSha(sParentSha);
                 String treeSha = tree.findDeletedFileTree(prevTreeSha,fileName);//if it even has a parentsha
-                tree.add("tree : " + treeSha);
-                addAllFilesToTree(tree, treeSha, prevTreeSha, fileName);//BUGBUGBUGBUGBUGBUG
+                indexFiles.add("tree : " + treeSha);//bug???????
+                addAllFilesToTree(indexFiles, treeSha, prevTreeSha, fileName);//BUGBUGBUGBUGBUGBUG
 
                 if(line.contains("*edited*")) {
                     Blob editedFile = new Blob(fileName);
                     String editedSha = editedFile.getSha1();
-                    tree.add("blob : " + editedSha + " : " + fileName);
+                    indexFiles.add("blob : " + editedSha + " : " + fileName);
                 }
 
                 //need to remove the file afterwwards
                 index.removeLine(line);
             }
         }
-        br0.close();
+        br0.close();*/
+
+
+
+
+
+        //puts deleted and edited files into an arraylist
+        if(counter>0) {
+            ArrayList<String> allDeleteEditFiles = new ArrayList<String>();
+            ArrayList<String> deletedFiles = new ArrayList<String>();
+            ArrayList<String> editedFiles = new ArrayList<String>();
+            BufferedReader br0 = new BufferedReader(new FileReader("index"));
+            while(br0.ready()) {
+                String line = br0.readLine();
+                if(line.contains("*deleted*")) {
+                    deletedFiles.add(line);
+                    allDeleteEditFiles.add(line);
+                    index.removeLine(line);//removes the line from index
+                }
+                else if (line.contains("*edited*")) {
+                    editedFiles.add(line);
+                    allDeleteEditFiles.add(line);
+                    index.removeLine(line);
+                }
+            }
+            br0.close();
+
+
+            ArrayList<String> indexFiles = new ArrayList<String>();
+            String prevTreeSha = getTreeSha(sParentSha);
+            String newLinkTreeSha = tree.findDeletedFileTree(prevTreeSha, sAuthor, allDeleteEditFiles);
+            tree.add("tree : " + newLinkTreeSha);//first line added!
+
+
+            addAllFilesToIndexList(indexFiles, newLinkTreeSha, prevTreeSha);
+            //ADD ARRAYLIST STUFF INTO TREE
+            for(int i=0; i<indexFiles.size(); i++) {
+                String line = indexFiles.get(i);
+                String fileName = line.substring(47);
+                if(!isDeletedFile(allDeleteEditFiles, fileName)) {
+                    tree.add(line);
+                }
+            }
+        }
+
+        
 
         //adding file contents
         //BUT if there is an asterisk before it u should not add it? what do u do for edit?
@@ -129,18 +178,19 @@ public class Commit {
         return tree.getSha();
     }
 
-    private void addAllFilesToTree(Tree tree, String stopSha, String currentTSha, String fileName) throws Exception {
+    private void addAllFilesToIndexList(ArrayList<String> indexFiles, String stopSha, String currentTSha) throws Exception {
         //fileName = the name of file deleted/edited
         //File treeFile = new File(currentTSha);
         //String contents = getFileContents(currentTSha);
-        String prevTreeSha = getFirstLine(currentTSha).substring(7);//get first line of the file thing (but this might not exist!!)
+        String firstLine = getFirstLine(currentTSha);//get first line of the file thing (but this might not exist!!)
 
-        if(currentTSha.equals(stopSha)) { }
+        if(currentTSha.equals(stopSha)) { }//????????
         else {
             //String treeContents = getFileContents(currentTSha);
-            addFileContentsToTree(currentTSha, tree);
-            if(prevTreeSha.length()!=47) {
-                addAllFilesToTree(tree,stopSha,prevTreeSha,fileName);
+            addFileContentsToIndexList(currentTSha, indexFiles);
+            if(firstLine.length()==47) {//previous tree's sha!
+                String prevTreeSha = getFirstLine(currentTSha).substring(7);
+                addAllFilesToIndexList(indexFiles,stopSha,prevTreeSha);
             }
             else {
                 throw new Exception ("File not found");
@@ -149,7 +199,7 @@ public class Commit {
 
     }
 
-    private void addFileContentsToTree(String fromFileName, Tree tree) throws IOException, NoSuchAlgorithmException {
+    private void addFileContentsToIndexList(String fromFileName, ArrayList<String> indexFiles) throws IOException, NoSuchAlgorithmException {
         String dirName = "./objects/";
         File dir = new File (dirName);
         File file = new File(dir,fromFileName);
@@ -162,14 +212,15 @@ public class Commit {
         }
         while(br.ready()) {
             String str = br.readLine();
-            String type = str.substring(0,4);
-            if(type.equals("tree")) {
-                //String entryName = str.substring(50);
-                tree.add(str);//wouldn't this add all things in that directory? but those same files would be in Index too? that would be duplicated? OH, TREE CANT DO DUPLICATE ok got it
-            }
-            else if (type.equals("blob")) {
-                tree.add(str);//why cant i just do this? whats the point of addDirecotry?
-            }//this literally still adds it into it.......KFJLDSHFAKDSJCHSDKCFJHSDFKJSDHFLKDSJFHLKSDJFH
+            // String type = str.substring(0,4);
+            // if(type.equals("tree")) {
+            //     //String entryName = str.substring(50);
+            //     indexFiles.add(str);//wouldn't this add all things in that directory? but those same files would be in Index too? that would be duplicated? OH, TREE CANT DO DUPLICATE ok got it
+            // }
+            // else if (type.equals("blob")) {
+            //     indexFiles.add(str);//why cant i just do this? whats the point of addDirecotry?
+            // }//this literally still adds it into it.......KFJLDSHFAKDSJCHSDKCFJHSDFKJSDHFLKDSJFHLKSDJFH
+            indexFiles.add(str);//is this local??? to method?????????
         }
         br.close();
     }
@@ -232,5 +283,14 @@ public class Commit {
         String firstLine = br.readLine();
         br.close();
         return firstLine;
+    }
+
+    private boolean isDeletedFile(ArrayList<String> deletedFiles, String fileName) {
+        for(int i=0; i<deletedFiles.size(); i++) {
+            if(deletedFiles.get(i).contains(fileName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -122,7 +122,7 @@ public class CommitTester {
     @Test
     void testCommit() throws Exception {
         Commit commit = new Commit("", "Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
         String date = commit.getDate();
         File file = new File("./objects/", sCommitSha);
@@ -143,7 +143,7 @@ public class CommitTester {
     @Test
     void testCommitOtherConstructor() throws Exception {
         Commit commit = new Commit("Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
         String date = commit.getDate();
         File file = new File("./objects/", sCommitSha);
@@ -173,7 +173,7 @@ public class CommitTester {
 
 
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
 
         String date1 = commit.getDate();
@@ -228,7 +228,7 @@ public class CommitTester {
         ind.addBlob("file2.txt");
 
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
 
         File first = new File("./objects/", sCommitSha);
@@ -262,7 +262,7 @@ public class CommitTester {
 
         
         Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
-        commit2.commit();
+        //commit2.commit();
         String sCommit2Sha = commit2.getCommitSha();
         commit.setNextSha(sCommit2Sha);
 
@@ -319,7 +319,7 @@ public class CommitTester {
         ind.addBlob("file2.txt");
 
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
 
         File first = new File("./objects/", sCommitSha);
@@ -353,7 +353,7 @@ public class CommitTester {
 
         
         Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
-        commit2.commit();
+        //commit2.commit();
         String sCommit2Sha = commit2.getCommitSha();
         String parentSha = commit2.getParentSha();
         commit.setNextSha(sCommit2Sha);
@@ -384,7 +384,7 @@ public class CommitTester {
         ind.addBlob("file6.txt");
 
         Commit commit3 = new Commit(sCommit2Sha,"Jingjing Duan", "This is a third commit.");
-        commit3.commit();
+        //commit3.commit();
         String sCommit3Sha = commit3.getCommitSha();
         String parentSha3 = commit3.getParentSha();
         commit2.setNextSha(sCommit3Sha);
@@ -423,7 +423,7 @@ public class CommitTester {
         assertTrue(subfolder2.isDirectory());
 
         Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a third commit.");
-        commit4.commit();
+        //commit4.commit();
         String sCommit4Sha = commit4.getCommitSha();
         String parentSha4 = commit4.getParentSha();
         commit3.setNextSha(sCommit4Sha);
@@ -465,7 +465,7 @@ public class CommitTester {
         ind.addBlob("file2.txt");
 
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
 
         File first = new File("./objects/", sCommitSha);
@@ -498,7 +498,7 @@ public class CommitTester {
 
         
         Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
-        commit2.commit();
+        //commit2.commit();
         String sCommit2Sha = commit2.getCommitSha();
         commit.setNextSha(sCommit2Sha);
 
@@ -532,7 +532,7 @@ public class CommitTester {
         ind.addBlob("file2.txt");
 
         Commit commit = new Commit("","Jake Parker", "This is my commit.");
-        commit.commit();
+        //commit.commit();
         String sCommitSha = commit.getCommitSha();
 
         File first = new File("./objects/", sCommitSha);
@@ -566,7 +566,7 @@ public class CommitTester {
 
         
         Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
-        commit2.commit();
+        //commit2.commit();
         String sCommit2Sha = commit2.getCommitSha();
         String parentSha = commit2.getParentSha();
         commit.setNextSha(sCommit2Sha);
@@ -597,7 +597,7 @@ public class CommitTester {
         ind.addBlob("file6.txt");
 
         Commit commit3 = new Commit(sCommit2Sha,"Jingjing Duan", "This is a third commit.");
-        commit3.commit();
+        //commit3.commit();
         String sCommit3Sha = commit3.getCommitSha();
         String parentSha3 = commit3.getParentSha();
         commit2.setNextSha(sCommit3Sha);
@@ -636,7 +636,7 @@ public class CommitTester {
         assertTrue(subfolder2.isDirectory());
 
         Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a 4th commit.");
-        commit4.commit();
+        //commit4.commit();
         String sCommit4Sha = commit4.getCommitSha();
         String parentSha4 = commit4.getParentSha();
         commit3.setNextSha(sCommit4Sha);
@@ -654,7 +654,6 @@ public class CommitTester {
         //5th commit has a deleted file
         ind.deleteFile("file7.txt");
         Commit commit5 = new Commit(sCommit4Sha,"Jingjing Duan", "This is a 5th commit.");
-        commit5.commit();
         String commit5ShaName = commit5.getCommitSha();
 
         String contents = commit5.getFileContents(commit5ShaName);

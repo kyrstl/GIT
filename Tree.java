@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class Tree {
     private StringBuilder treeContents;
@@ -151,27 +152,44 @@ public class Tree {
         return sha1;
     }
 
-    public String findDeletedFileTree(String treeSha, String fileName) throws Exception {
-        String sha = recurse(treeSha, fileName);
+    public String findDeletedFileTree(String treeSha, ArrayList<String> deletedFiles) throws Exception {
+        String sha = recurse(treeSha, deletedFiles);
         return sha;
     }
 
-    private String recurse(String treeSha, String fileName) throws Exception {
+    private String recurse(String treeSha, ArrayList<String> deletedFiles) throws Exception {//arrayList
         //File treeFile = new File(treeSha);//might need path name = objects
         String contents = getFileContents(treeSha);
-        String firstLine = getFirstLine(treeSha);
+        String firstLine = getFirstLine(treeSha);//first line of tree file (check if it has a previous tree
+        //File file = new File(fileName);//file thats getting deleted
 
-        if(contents.contains(fileName) && !firstLine.equals("")) {
-            return(firstLine.substring(7));
+        if(containsDeletedFile(deletedFiles,contents) && firstLine.length()!=47 && deletedFiles.size()==1) {
+            return(firstLine.substring(7,47)); //THIS IS THE SHA OF THE TREE
+            //removes frm list WHEN list size is 0 or 1 then return that sha
         }
-        else if (contents.contains(fileName)) {
-            return "";
+        else if (containsDeletedFile(deletedFiles,contents) && firstLine.length()!=47) {
+            //return "";//if first commit contains file
+            //String fileSha = Blob.encryptPassword(contents);
+
+            /*if(file.isDirectory()) {
+                deletedFiles.remove("tree : " + fileSha + " : " + fileName);
+            }
+            else {
+                deletedFiles.remove("blob : " + fileSha + " : " + fileName);
+            }*/
+            deletedFiles.remove(0);
+            String prevTreeSha = firstLine.substring(7,47);
+            return recurse(prevTreeSha, deletedFiles);
         }
-        else if (firstLine.equals("")) {
+        else if (containsDeletedFile(deletedFiles,contents)) { //has no previous tree
+            return "";//if first commit contains file
+        }
+        else if (firstLine.length() != 47) {
             throw new Exception("File not found");
         }
         else {
-            return recurse(firstLine,fileName);
+            String prevTreeSha = firstLine.substring(7,47);
+            return recurse(prevTreeSha, deletedFiles);
         }
 
     }
@@ -200,6 +218,23 @@ public class Tree {
         String firstLine = br.readLine();
         br.close();
         return firstLine;
+    }
+
+    private boolean containsDeletedFile(ArrayList<String> deletedFiles, String contents) {
+        for(int i=0; i<deletedFiles.size(); i++) {//loops from front
+            String entry = deletedFiles.get(i);
+            String fileName = "";
+            if(entry.contains("deleted")) {
+                fileName = entry.substring(10);
+            }
+            else if (entry.contains("edited")){
+                fileName = entry.substring(9);
+            }
+            if(contents.contains(fileName) && fileName.equals("")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*public void main(String... args) {
