@@ -94,7 +94,7 @@ public class Commit {
                 String prevTreeSha = getTreeSha(sParentSha);
                 String treeSha = tree.findDeletedFileTree(prevTreeSha,fileName);//if it even has a parentsha
                 tree.add("tree : " + treeSha);
-                addAllFilesToTree(tree, treeSha, prevTreeSha, fileName);
+                addAllFilesToTree(tree, treeSha, prevTreeSha, fileName);//BUGBUGBUGBUGBUGBUG
 
                 if(line.contains("*edited*")) {
                     Blob editedFile = new Blob(fileName);

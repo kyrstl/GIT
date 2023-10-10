@@ -438,6 +438,17 @@ public class CommitTester {
         assertTrue(commit3.getNextSha().equals(sCommit4Sha));
         assertTrue(commit4.getParentSha().equals(sCommit3Sha));
 
+        String date4 = commit4.getDate();
+        String commit4contents = 
+            "6d0790f43373ce52717d130959dd14e6f1d7cde0" + "\n" +
+            "346cf31d76fc378375f745fec8985bd5660791cd" + "\n" + //parentSha
+            "\n" +
+            "Jingjing Duan"                             + "\n" +
+            date4                                       + "\n" +
+            "This is a third commit."                       ;
+
+        assertEquals(commit4contents, Files.readString(Paths.get("./objects/" + sCommit4Sha)));
+
     }
 
     @Test
@@ -647,7 +658,7 @@ public class CommitTester {
         String commit5ShaName = commit5.getCommitSha();
 
         String contents = commit5.getFileContents(commit5ShaName);
-        
+
     }
 
     public void writeContents(File file, String contents) throws FileNotFoundException {
