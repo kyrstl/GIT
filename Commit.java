@@ -45,6 +45,7 @@ public class Commit {
         f_writer.close();
 
         createHead();
+        System.out.println("COMMIT FILE:\n" + sCommit.toString());
     }
 
     public void setParentSha(String parentSha) {
