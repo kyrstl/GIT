@@ -163,11 +163,11 @@ public class Tree {
         String firstLine = getFirstLine(treeSha);//first line of tree file (check if it has a previous tree
         //File file = new File(fileName);//file thats getting deleted
 
-        if(containsDeletedFile(deletedFiles,contents) && firstLine.length()!=47 && deletedFiles.size()==1) {
+        if(containsDeletedFile(deletedFiles,contents) && firstLine.length()==47 && deletedFiles.size()==1) {
             return(firstLine.substring(7,47)); //THIS IS THE SHA OF THE TREE
             //removes frm list WHEN list size is 0 or 1 then return that sha
         }
-        else if (containsDeletedFile(deletedFiles,contents) && firstLine.length()!=47) {
+        else if (containsDeletedFile(deletedFiles,contents) && firstLine.length()==47) {
             //return "";//if first commit contains file
             //String fileSha = Blob.encryptPassword(contents);
 
@@ -177,7 +177,8 @@ public class Tree {
             else {
                 deletedFiles.remove("blob : " + fileSha + " : " + fileName);
             }*/
-            deletedFiles.remove(0);
+            String removedFile = deletedFiles.get(deletedFiles.size()-1);
+            deletedFiles.remove(deletedFiles.size()-1);
             String prevTreeSha = firstLine.substring(7,47);
             return recurse(prevTreeSha, deletedFiles);
         }
@@ -230,7 +231,7 @@ public class Tree {
             else if (entry.contains("edited")){
                 fileName = entry.substring(9);
             }
-            if(contents.contains(fileName) && fileName.equals("")) {
+            if(contents.contains(fileName) && !fileName.equals("")) {
                 return true;
             }
         }

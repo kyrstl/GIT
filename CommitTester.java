@@ -441,7 +441,7 @@ public class CommitTester {
         String date4 = commit4.getDate();
         String commit4contents = 
             "6d0790f43373ce52717d130959dd14e6f1d7cde0" + "\n" +
-            "346cf31d76fc378375f745fec8985bd5660791cd" + "\n" + //parentSha
+            "f111c08094c2d7b23e7ca52ab19c41c1af77fd12" + "\n" + //parentSha
             "\n" +
             "Jingjing Duan"                             + "\n" +
             date4                                       + "\n" +
@@ -452,7 +452,7 @@ public class CommitTester {
     }
 
     @Test
-    @DisplayName("test 2 commits w/ 1 folder")
+    @DisplayName("test 2 commits w/ 1 folder w/ a file inside")
     void testCommit4() throws Exception {
         Index ind = new Index();
         ind.init();
@@ -495,6 +495,7 @@ public class CommitTester {
         ind.addBlob("subpath");
         ind.addBlob("./subpath/" + "file4.txt");//should we be able to add files that arent in the main folder to index?
         //WOULD WE HAVE TO CREATE A TREE IN INDEX???
+        //ind.addBlobWithPath(subfolder,"subpath");
 
         
         Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
@@ -651,12 +652,41 @@ public class CommitTester {
         assertTrue(commit3.getNextSha().equals(sCommit4Sha));
         assertTrue(commit4.getParentSha().equals(sCommit3Sha));
 
-        //5th commit has a deleted file
-        ind.deleteFile("file7.txt");
+        //5th commit has a deleted file THIS TEST WORKS
+        /*ind.deleteFile("file7.txt");
         Commit commit5 = new Commit(sCommit4Sha,"Jingjing Duan", "This is a 5th commit.");
-        String commit5ShaName = commit5.getCommitSha();
+        String sCommit5Sha = commit5.getCommitSha();
 
-        String contents = commit5.getFileContents(commit5ShaName);
+        String contents = commit5.getFileContents(sCommit5Sha);
+
+        String tSha5 = commit5.getCurrentTreeSha();
+        String expectedSha5 = "5423d1d226bd36c0d5c3d3c8aab478714269f474";
+        assertEquals(expectedSha5, tSha5);*/
+
+
+        //fifth commit
+        ind.deleteFile("file3.txt");
+        ind.deleteFile("file6.txt");
+        Commit commit5 = new Commit(sCommit4Sha,"Jingjing Duan", "This is a 5th commit.");
+        String sCommit5Sha = commit5.getCommitSha();
+
+        String contents = commit5.getFileContents(sCommit5Sha);
+
+        String tSha5 = commit5.getCurrentTreeSha();
+        String expectedSha5 = "0ceaccf92c1704d1dcdfc35ba3d2e97d976f05dd";
+        assertEquals(expectedSha5, tSha5);
+
+        //writeContents(file4,"4");
+        //ind.addBlob("file4.txt");
+        /*Commit commit6 = new Commit(sCommit5Sha,"Jingjing Duan", "This is a 5th commit.");
+        String sCommit6Sha = commit6.getCommitSha();
+
+        String contents6 = commit6.getFileContents(sCommit6Sha);
+
+        String tSha6 = commit6.getCurrentTreeSha();
+        String expectedSha6 = "5423d1d226bd36c0d5c3d3c8aab478714269f474";
+        assertEquals(expectedSha6, tSha6);*/
+
 
     }
 

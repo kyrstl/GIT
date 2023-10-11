@@ -119,6 +119,7 @@ public class Commit {
         //puts deleted and edited files into an arraylist
         if(counter>0) {
             ArrayList<String> allDeleteEditFiles = new ArrayList<String>();
+            ArrayList<String> tempDeletedEditedFiles = new ArrayList<String>();
             ArrayList<String> deletedFiles = new ArrayList<String>();
             ArrayList<String> editedFiles = new ArrayList<String>();
             BufferedReader br0 = new BufferedReader(new FileReader("index"));
@@ -127,11 +128,13 @@ public class Commit {
                 if(line.contains("*deleted*")) {
                     deletedFiles.add(line);
                     allDeleteEditFiles.add(line);
+                    tempDeletedEditedFiles.add(line);
                     index.removeLine(line);//removes the line from index
                 }
                 else if (line.contains("*edited*")) {
                     editedFiles.add(line);
                     allDeleteEditFiles.add(line);
+                    tempDeletedEditedFiles.add(line);
                     index.removeLine(line);
                 }
             }
@@ -140,17 +143,31 @@ public class Commit {
 
             ArrayList<String> indexFiles = new ArrayList<String>();
             String prevTreeSha = getTreeSha(sParentSha);
-            String newLinkTreeSha = tree.findDeletedFileTree(prevTreeSha, sAuthor, allDeleteEditFiles);
+            //ArrayList<String> tempDeletedEditedFiles = allDeleteEditFiles;
+            String newLinkTreeSha = tree.findDeletedFileTree(prevTreeSha, tempDeletedEditedFiles);
             tree.add("tree : " + newLinkTreeSha);//first line added!
 
 
+            //deletedEditedFilesLength = allDeleteEditFiles.size();
+            //int tempLength = tempDeletedEditedFiles.size();
+
             addAllFilesToIndexList(indexFiles, newLinkTreeSha, prevTreeSha);
             //ADD ARRAYLIST STUFF INTO TREE
+
+            int deletedFilesLength = deletedFiles.size();
+            int deletedEditedFilesLength = allDeleteEditFiles.size();
+
+
             for(int i=0; i<indexFiles.size(); i++) {
                 String line = indexFiles.get(i);
-                String fileName = line.substring(47);
+                String fileName = line.substring(50);
                 if(!isDeletedFile(allDeleteEditFiles, fileName)) {
                     tree.add(line);
+                }
+                else if(isEditedFile(editedFiles, fileName)) {
+                    Blob editedFile = new Blob(fileName);
+                    String editedSha = editedFile.getSha1();
+                    tree.add("blob : " + editedSha + " : " + fileName);
                 }
             }
         }
@@ -287,7 +304,17 @@ public class Commit {
 
     private boolean isDeletedFile(ArrayList<String> deletedFiles, String fileName) {
         for(int i=0; i<deletedFiles.size(); i++) {
-            if(deletedFiles.get(i).contains(fileName)) {
+            String entry = deletedFiles.get(i);
+            if(entry.contains(fileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isEditedFile(ArrayList<String> editedFiles, String fileName) {
+        for(int i=0; i<editedFiles.size(); i++) {
+            if(editedFiles.get(i).contains(fileName)) {
                 return true;
             }
         }

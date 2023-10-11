@@ -126,20 +126,20 @@ public class Index {
     }
 
     public void deleteFile(String fileName) throws IOException {
-        PrintWriter pw = new PrintWriter("index");
+        PrintWriter pw = new PrintWriter(new FileWriter("index", true));
         if(!isEmpty()) {
-            pw.print("\n");
+            pw.append("\n");
         }
-        pw.print("*deleted* " + fileName);
+        pw.append("*deleted* " + fileName);
         pw.close();//what??
     }
 
     public void editFile(String fileName) throws IOException {
-        PrintWriter pw = new PrintWriter("index");
+        PrintWriter pw = new PrintWriter(new FileWriter("index", true));
         if(isEmpty()) {
-            pw.print("\n");
+            pw.append("\n");
         }
-        pw.print("*edited* " + fileName);
+        pw.append("*edited* " + fileName);
         pw.close();//what??
     }
 
