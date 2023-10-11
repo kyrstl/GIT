@@ -43,6 +43,8 @@ public class Commit {
         FileWriter f_writer = new FileWriter("objects/" + this.sCommitSha);
         f_writer.write(sCommit.toString());
         f_writer.close();
+
+        createHead();
     }
 
     public void setParentSha(String parentSha) {
