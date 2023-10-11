@@ -736,4 +736,81 @@ public class CommitTester {
         String treeSha = commit.getCurrentTreeSha();
         assertEquals(sPredictedSha, treeSha);
     }
+
+    @Test
+    @DisplayName("test 2 commits then checkout")
+    void testCheckout() throws Exception {
+        Index ind = new Index();
+        ind.init();
+
+        //first commit
+        File file2 = new File("file2.txt");
+        if(!file2.exists()) {
+            file2.createNewFile();
+        }
+        ind.addBlob("file2.txt");
+
+        Commit commit = new Commit("","Jake Parker", "This is my commit.");
+        String sCommitSha = commit.getCommitSha();
+
+        File first = new File("./objects/", sCommitSha);
+        assertTrue(first.exists());
+
+        String tSha = commit.getCurrentTreeSha();
+        String expectedSha = "7420abea04daa61be92b66d8b2004f38c4144269";
+        assertEquals(expectedSha, tSha);
+
+
+        //adding second commit
+        File file3 = new File("file3.txt");
+        if(!file3.exists()) {
+            file3.createNewFile();
+        }
+        ind.addBlob("file3.txt");
+
+        File file4 = new File("file4.txt");
+        if(!file4.exists()) {
+            file4.createNewFile();
+        }
+        ind.addBlob("file4.txt");
+        
+        File subfolder = new File("subpath");
+        subfolder.mkdirs();
+        
+        ind.addBlob("subpath");
+
+        assertTrue(subfolder.isDirectory());
+
+        
+        Commit commit2 = new Commit(sCommitSha,"Jingjing Duan", "This is a second commit.");
+        String sCommit2Sha = commit2.getCommitSha();
+        commit.setNextSha(sCommit2Sha);
+        String parentSha = commit2.getParentSha();
+
+        File second = new File("./objects/", sCommit2Sha);
+        assertTrue(second.exists());
+
+        String tSha2 = commit2.getCurrentTreeSha();
+        String expectedSha2 = "6c7e58a2700e3a97b8e295133521e7eb9077408e";//wrong this is if blob
+        assertEquals(expectedSha2, tSha2);
+
+        assertTrue(commit.getNextSha().equals(sCommit2Sha));
+        assertTrue(commit2.getParentSha().equals(sCommitSha));
+
+        commit2.checkout("900535e1cd9a537a91a5ec47873e98cbc7c41e32");
+        tSha2 = commit2.getCurrentTreeSha();
+        assertEquals(tSha,tSha2);
+        sCommit2Sha = commit2.getCommitSha();
+
+        String date2 = commit2.getDate();
+        String commitContents = 
+            "7420abea04daa61be92b66d8b2004f38c4144269" + "\n" +
+            "900535e1cd9a537a91a5ec47873e98cbc7c41e32" + "\n" + //parentSha
+            "Jingjing Duan"                            + "\n" +
+            date2                                      + "\n" +
+            "This is a second commit."                       ;
+        String myExpectedCommitSha = Blob.encryptPassword(commitContents);
+
+        assertEquals(myExpectedCommitSha,sCommit2Sha);
+    }
 }

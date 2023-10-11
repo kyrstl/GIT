@@ -324,7 +324,9 @@ public class Commit {
     }
 
     public void createHead() throws IOException {
-        File head = new File("HEAD");
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File head = new File(dir,"HEAD");
         if(!head.exists()) {
             head.createNewFile();
         }
@@ -336,11 +338,17 @@ public class Commit {
 
     public void checkout(String commitSha) throws Exception {
         String currentTreeSha = getCurrentTreeSha();
+        String dirName = "./objects/";
+        File dir = new File (dirName);
+        File currentTreeFile = new File(dir,currentTreeSha);
+
         String oldTreeSha = getTreeSha(commitSha);
         String oldContents = getFileContents(oldTreeSha);
-        PrintWriter pw = new PrintWriter(new FileWriter(currentTreeSha));
+        PrintWriter pw = new PrintWriter(new FileWriter(currentTreeFile));
         pw.print(oldContents);
         pw.close();
-        sTreeSha = oldTreeSha;
+        //sTreeSha = oldTreeSha;
+        sTreeSha = Blob.encryptPassword(oldContents);
+        commit();
     }
 }
