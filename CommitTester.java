@@ -117,6 +117,11 @@ public class CommitTester {
         if(file8.exists()) {
             file8.delete();
         }
+
+        File file9 = new File("file9.txt");
+        if(file9.exists()) {
+            file9.delete();
+        }
     }
 
     @Test
@@ -687,6 +692,26 @@ public class CommitTester {
         String expectedSha6 = "5423d1d226bd36c0d5c3d3c8aab478714269f474";
         assertEquals(expectedSha6, tSha6);*/
 
+        File file77 = new File("file7.txt");
+        writeContents(file77,"77");
+        //ind.addBlob("file7.txt");//um do i add? prob not
+        ind.editFile("file7.txt");
+
+        File file9 = new File("file9.txt");
+        if(!file9.exists()) {
+            file9.createNewFile();
+        }
+        writeContents(file9,"9");
+        ind.addBlob("file9.txt");
+
+        Commit commit6 = new Commit(sCommit5Sha,"Jingjing Duan", "This is a 5th commit.");
+        String sCommit6Sha = commit6.getCommitSha();
+
+        String contents6 = commit6.getFileContents(sCommit6Sha);
+
+        String tSha6 = commit6.getCurrentTreeSha();
+        String expectedSha6 = "cead3a3f0d3efe8b0a569cff13a0e4c5a90f562e";
+        assertEquals(expectedSha6, tSha6);
 
     }
 

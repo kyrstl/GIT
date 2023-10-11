@@ -136,7 +136,7 @@ public class Index {
 
     public void editFile(String fileName) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter("index", true));
-        if(isEmpty()) {
+        if(!isEmpty()) {
             pw.append("\n");
         }
         pw.append("*edited* " + fileName);
