@@ -333,4 +333,14 @@ public class Commit {
         pw.print(currentCommitSha);
         pw.close();
     }
+
+    public void checkout(String commitSha) throws Exception {
+        String currentTreeSha = getCurrentTreeSha();
+        String oldTreeSha = getTreeSha(commitSha);
+        String oldContents = getFileContents(oldTreeSha);
+        PrintWriter pw = new PrintWriter(new FileWriter(currentTreeSha));
+        pw.print(oldContents);
+        pw.close();
+        sTreeSha = oldTreeSha;
+    }
 }
