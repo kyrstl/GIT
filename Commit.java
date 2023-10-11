@@ -320,4 +320,15 @@ public class Commit {
         }
         return false;
     }
+
+    public void createHead() throws IOException {
+        File head = new File("HEAD");
+        if(!head.exists()) {
+            head.createNewFile();
+        }
+        PrintWriter pw = new PrintWriter(new FileWriter(head));
+        String currentCommitSha = getCommitSha();
+        pw.print(currentCommitSha);
+        pw.close();
+    }
 }
