@@ -148,7 +148,9 @@ public class Commit {
             String prevTreeSha = getTreeSha(sParentSha);
             //ArrayList<String> tempDeletedEditedFiles = allDeleteEditFiles;
             String newLinkTreeSha = tree.findDeletedFileTree(prevTreeSha, tempDeletedEditedFiles);
-            tree.add("tree : " + newLinkTreeSha);//first line added!
+            if(!newLinkTreeSha.equals("")) {
+                tree.add("tree : " + newLinkTreeSha);//first line added!
+            }
 
 
             //deletedEditedFilesLength = allDeleteEditFiles.size();
