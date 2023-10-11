@@ -427,7 +427,7 @@ public class CommitTester {
 
         assertTrue(subfolder2.isDirectory());
 
-        Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a third commit.");
+        Commit commit4 = new Commit(sCommit3Sha,"Jingjing Duan", "This is a fourth commit.");
         //commit4.commit();
         String sCommit4Sha = commit4.getCommitSha();
         String parentSha4 = commit4.getParentSha();
@@ -450,7 +450,7 @@ public class CommitTester {
             "\n" +
             "Jingjing Duan"                             + "\n" +
             date4                                       + "\n" +
-            "This is a third commit."                       ;
+            "This is a fourth commit."                       ;
 
         assertEquals(commit4contents, Files.readString(Paths.get("./objects/" + sCommit4Sha)));
 
